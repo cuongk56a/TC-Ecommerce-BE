@@ -1,6 +1,8 @@
 import express from 'express';
 import { appConfigs } from '../../config/config';
 import { userRoute } from '../../modules/user/user.route';
+import { organizationRoute } from '../../modules/organization/organization.route';
+import { locationRoute } from '../../modules/location/location.route';
 
 const router = express.Router();
 
@@ -8,6 +10,14 @@ const defaultRoutes: any[] = [
     {
         path: '/user',
         route: userRoute
+    },
+    {
+        path: '/organization',
+        route: organizationRoute
+    },
+    {
+        path: '/location',
+        route: locationRoute
     }
 ];
 
