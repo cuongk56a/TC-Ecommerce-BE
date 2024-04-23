@@ -11,7 +11,6 @@ const createOne = {
     email: Joi.string(),
     birthday: Joi.string(),
     gender: Joi.string().valid(...Object.values(UserGender)),
-    country: Joi.string(),
     address: Joi.string(),
     isTeacher: Joi.boolean(),
     importCode: Joi.string(),

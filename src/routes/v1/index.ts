@@ -3,6 +3,9 @@ import { appConfigs } from '../../config/config';
 import { userRoute } from '../../modules/user/user.route';
 import { organizationRoute } from '../../modules/organization/organization.route';
 import { locationRoute } from '../../modules/location/location.route';
+import { authRoute } from '../../modules/auth/auth.route';
+import { roleRoute } from '../../modules/role/role.route';
+import { activityLogRoute } from '../../modules/activityLog/activityLog.route';
 
 const router = express.Router();
 
@@ -12,12 +15,24 @@ const defaultRoutes: any[] = [
         route: userRoute
     },
     {
+        path: '/auth',
+        route: authRoute
+    },
+    {
         path: '/organization',
         route: organizationRoute
     },
     {
         path: '/location',
         route: locationRoute
+    },
+    {
+        path: '/role',
+        route: roleRoute
+    },
+    {
+        path: '/activity-log',
+        route: activityLogRoute
     }
 ];
 

@@ -6,42 +6,37 @@ import {
     addUpdatedByIdToBody,
 } from '../../middlewares/addUserToBody'
 import {validate} from '../../middlewares/validate';
-import {userController} from './user.controller';
-import {userValidation} from './user.validation';
-import { checkPermission } from '../../middlewares/checkPermission';
-import { PERMISSION_TYPE } from '../role/role.type';
+import {activityLogController} from './activityLog.controller';
+import {activityLogValidation} from './activityLog.validation';
 
 const router = express.Router()
 
 router
     .route('/')
-    .post(auth(),addCreatedByIdToBody,validate(userValidation.createOne),userController.createOne)
-    .get(validate(userValidation.getList),userController.getList);
+    .get(validate(activityLogValidation.getList),activityLogController.getList);
 
-router.route('/all').get(auth(),checkPermission(PERMISSION_TYPE.USER_READ),validate(userValidation.getAll),userController.getAll);
+router.route('/all').get(auth(),validate(activityLogValidation.getAll),activityLogController.getAll);
 
 router
-    .route('/:userId')
-    .get(validate(userValidation.getOne), userController.getOne)
-    .patch(auth(), addUpdatedByIdToBody, validate(userValidation.updateOne), userController.updateOne)
-    .delete(auth(), addDeletedByToBody, validate(userValidation.deleteOne), userController.deleteOne)
+    .route('/:activityLogId')
+    .get(validate(activityLogValidation.getOne), activityLogController.getOne);
 
-export const userRoute = router;
+export const activityLogRoute = router;
 
 /**
  * @swagger
  * tags:
- *   name: User
- *   description: User management and retrieval
+ *   name: activityLog
+ *   description: activityLog management and retrieval
  */
 
 /**
  * @swagger
- * /user:
+ * /activityLog:
  *   post:
- *     summary: Create a User
- *     description: User create a user.
- *     tags: [User]
+ *     summary: Create a activityLog
+ *     description: activityLog create a activityLog.
+ *     tags: [activityLog]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -70,7 +65,7 @@ export const userRoute = router;
  *                 type: string
  *               address:
  *                 type: string
- *               organizationId:
+ *               activityLogId:
  *                 type: string
  *             example:
  *               email: fake@example.com
@@ -80,14 +75,14 @@ export const userRoute = router;
  *               birthday: 08/02/2023
  *               country: Ha Noi
  *               address: Ha Noi
- *               organizationId: 655b2218fb4d3fadb64ed673
+ *               activityLogId: 655b2218fb4d3fadb64ed673
  *     responses:
  *       "200":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/activityLog'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -95,9 +90,9 @@ export const userRoute = router;
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *   get:
- *     summary: Get list Users
- *     description: Only admins can retrieve all users.
- *     tags: [User]
+ *     summary: Get list activityLogs
+ *     description: Only admins can retrieve all activityLogs.
+ *     tags: [activityLog]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -112,7 +107,7 @@ export const userRoute = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of activityLogs
  *       - in: query
  *         name: page
  *         schema:
@@ -131,7 +126,7 @@ export const userRoute = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/activityLog'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -152,11 +147,11 @@ export const userRoute = router;
 
 /**
  * @swagger
- * /user/all:
+ * /activityLog/all:
  *   get:
- *     summary: Get all Users
- *     description: Only admins can retrieve all users.
- *     tags: [User]
+ *     summary: Get all activityLogs
+ *     description: Only admins can retrieve all activityLogs.
+ *     tags: [activityLog]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -167,7 +162,7 @@ export const userRoute = router;
  *           application/json:
  *             schema:
  *               type: array
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/activityLog'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -176,27 +171,27 @@ export const userRoute = router;
 
 /**
  * @swagger
- * /user/{userId}:
+ * /activityLog/{activityLogId}:
  *   get:
- *     summary: get user
+ *     summary: get activityLog
  *     description:
- *     tags: [User]
+ *     tags: [activityLog]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: activityLogId
  *         required: true
  *         schema:
  *           type: string
- *         description: get user
+ *         description: get activityLog
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/activityLog'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -206,18 +201,18 @@ export const userRoute = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *   patch:
- *     summary: Update a user
- *     description: update user
- *     tags: [User]
+ *     summary: Update a activityLog
+ *     description: update activityLog
+ *     tags: [activityLog]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: activityLogId
  *         required: true
  *         schema:
  *           type: string
- *         description: userId id
+ *         description: activityLogId id
  *     requestBody:
  *       required: true
  *       content:
@@ -239,25 +234,25 @@ export const userRoute = router;
  *                 type: string
  *               address:
  *                 type: string
- *               organizationId:
+ *               activityLogId:
  *                 type: string
  *             example:
  *               email: fake@example.com
  *               phone: 0358849971
  *               fullName: fake name
- *               userName: fake userName
+ *               activityLogName: fake activityLogName
  *               avatar: image.png
  *               birthday: 08/02/2023
  *               country: Ha Noi
  *               address: Ha Noi
- *               organizationId: 655b2218fb4d3fadb64ed673
+ *               activityLogId: 655b2218fb4d3fadb64ed673
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/activityLog'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -267,18 +262,18 @@ export const userRoute = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *   delete:
- *     summary: Delete a user
- *     description: delete user.
- *     tags: [User]
+ *     summary: Delete a activityLog
+ *     description: delete activityLog.
+ *     tags: [activityLog]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: activityLogId
  *         required: true
  *         schema:
  *           type: string
- *         description: user id
+ *         description: activityLog id
  *     responses:
  *       "200":
  *         description: successfully

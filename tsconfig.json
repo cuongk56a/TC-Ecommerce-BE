@@ -14,7 +14,7 @@
       "types": ["node"],
       "noImplicitThis": false
     },
-    "include": ["src/**/*", "submodules/**/*"],
+    "include": ["src/**/*", "submodules/**/*", "src/modules/activityLog/activityLog.configs.ts"],
     "exclude": ["bin", "tests"]
   }
   

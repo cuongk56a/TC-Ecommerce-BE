@@ -30,7 +30,8 @@ const envVarsSchema = Joi.object()
     JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
       .default(10)
       .description('minutes after which verify email token expires'),
-
+    EMAIL: Joi.string().email().required(),
+    PASS: Joi.string().required(),
     SERVICE_FILE_URI: Joi.string().required(),
   })
   .unknown();
@@ -72,6 +73,10 @@ export const appConfigs = {
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+  },
+  google: {
+    email: envVars.EMAIL,
+    pass: envVars.PASS,
   },
   services: {
     svFile: envVars.SERVICE_FILE_URI,

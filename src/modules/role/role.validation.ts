@@ -50,7 +50,7 @@ const getOne = {
 
 const getList = {
   query: Joi.object().keys({
-    roleId: Joi.string().custom(customValidations.objectId),
+    targetId: Joi.string().custom(customValidations.objectId),
     ...customValidations.paginateValidation,
   }),
 };
@@ -58,7 +58,7 @@ const getList = {
 
 const getAll = {
   query: Joi.object().keys({
-    roleId: Joi.string().custom(customValidations.objectId),
+    targetId: Joi.string().custom(customValidations.objectId),
   }),
 };
 

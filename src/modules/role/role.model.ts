@@ -32,6 +32,10 @@ const roleSchema = new mongoose.Schema<IRoleModelDoc>(
       type: [String],
       default: []
     },
+    userIds: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: []
+    },
     isActice: {
       type: Boolean,
       default: true,
@@ -61,6 +65,14 @@ roleSchema.plugin(toJSON);
 roleSchema.plugin(paginate);
 
 roleSchema.index({name: 'text'});
+
+roleSchema.virtual('users', {
+  ref: TABLE_USER,
+  localField: 'userIds', // Find people or organizations where `localField`
+  foreignField: '_id', // is equal to `foreignField`
+  justOne: false, // and return only one
+  match: {deletedById: {$exists: false}},
+});
 
 /**
  * @typedef Role

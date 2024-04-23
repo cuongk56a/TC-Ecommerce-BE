@@ -3,6 +3,7 @@ import app from './app';
 import logger from './config/logger';
 import {appConfigs} from './config/config';
 import { fakeData } from './fakeData/fake';
+import { onConnetCallback } from './redis';
 export {};
 
 declare global {
@@ -17,7 +18,9 @@ declare global {
 
 let server: any;
 
-mongoose
+onConnetCallback(() => {
+  console.log('Redis Connect Success!');
+  mongoose
   .connect(appConfigs.mongoose.url, {
     // useNewUrlParser: true, // <-- no longer necessary
     // useUnifiedTopology: true // <-- no longer necessary
@@ -40,6 +43,8 @@ mongoose
       // fakeData()
     });
   });
+})
+
 
 
 const exitHandler = () => {

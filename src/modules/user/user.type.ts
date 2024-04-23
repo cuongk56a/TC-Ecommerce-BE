@@ -9,8 +9,6 @@ export enum UserGender {
 
 export interface IUserDoc extends IDoc {
   CODE: string;
-
-  // userName: string;
   phone: string;
   email: string;
   fullName: string;
@@ -18,10 +16,8 @@ export interface IUserDoc extends IDoc {
   avatar: string;
   birthday: string;
   gender: UserGender;
-  country: string;
   address: string;
   importCode: string;
-  organizationId: mongoose.Schema.Types.ObjectId;
-  isAdmin: boolean;
-  isTeacher: boolean;
+  organizationIds: mongoose.Schema.Types.ObjectId[];
+  isActive: boolean;
 }

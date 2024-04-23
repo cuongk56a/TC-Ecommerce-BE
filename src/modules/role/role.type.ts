@@ -44,5 +44,6 @@ export interface IRoleDoc extends IDoc {
   targetOnModel: string;
   name: string;
   permissions: string[];
+  userIds: mongoose.Schema.Types.ObjectId[];
   isActice: boolean;
 }

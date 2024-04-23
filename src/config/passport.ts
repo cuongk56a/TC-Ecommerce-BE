@@ -19,5 +19,5 @@ export const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 
 export const getNewToken = (payload: any) => {
   const expiresIn = appConfigs.jwt.accessExpirationSeconds;
-  return jwt.sign(payload, appConfigs.jwt.secret, {expiresIn});
+  return jwt.sign(payload, appConfigs.jwt.secret, {expiresIn: 3600});
 };
