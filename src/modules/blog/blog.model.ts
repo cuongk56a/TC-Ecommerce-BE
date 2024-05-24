@@ -13,7 +13,7 @@ const blogSchema = new mongoose.Schema<IBlogModelDoc>(
   {
     targetId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: 'targetOneModel',
+      refPath: 'targetOnModel',
       required: true,
     },
     targetOnModel: {

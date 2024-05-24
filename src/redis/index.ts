@@ -2,10 +2,10 @@ import { createClient } from 'redis';
 import { appConfigs } from '../config/config';
 
 const client = createClient({
-    password: 'XyxfGbbalo3BT6mC9NWPsrz5VFBLnVze',
+    password: 'BQXiD0Sl9jpLk5R0NoEQnqwVnWqWj7c2',
     socket: {
-        host: 'redis-15543.c100.us-east-1-4.ec2.redns.redis-cloud.com',
-        port: 15543
+        host: 'redis-12030.c99.us-east-1-4.ec2.redns.redis-cloud.com',
+        port: 12030
     }
 });
 

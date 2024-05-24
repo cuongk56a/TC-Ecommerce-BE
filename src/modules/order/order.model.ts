@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema<IOrderModelDoc>(
   {
     targetId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: 'targetOneModel',
+      refPath: 'targetOnModel',
       required: true,
     },
     targetOnModel: {

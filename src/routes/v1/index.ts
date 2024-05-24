@@ -6,6 +6,10 @@ import { locationRoute } from '../../modules/location/location.route';
 import { authRoute } from '../../modules/auth/auth.route';
 import { roleRoute } from '../../modules/role/role.route';
 import { activityLogRoute } from '../../modules/activityLog/activityLog.route';
+import { brandRoute } from '../../modules/brand/brand.route';
+import { categoryRoute } from '../../modules/category/category.route';
+import { unitRoute } from '../../modules/product/unit/unit.route';
+import { productRoute } from '../../modules/product/product/product.route';
 
 const router = express.Router();
 
@@ -33,7 +37,23 @@ const defaultRoutes: any[] = [
     {
         path: '/activity-log',
         route: activityLogRoute
-    }
+    },
+    {
+        path: '/brand',
+        route: brandRoute,
+    },
+    {
+        path: '/category',
+        route: categoryRoute,
+    },
+    {
+        path: '/unit',
+        route: unitRoute,
+    },
+    {
+        path: '/product',
+        route: productRoute,
+    },
 ];
 
 const devRoutes: any[] = [

@@ -13,6 +13,7 @@ const createOne = {
       Joi.string().required()
     ),
     categoryId: Joi.string().custom(customValidations.objectId).empty(''),
+    brandId: Joi.string().custom(customValidations.objectId).empty(''),
     capitalPrice: Joi.number().empty(''),
     salePrice: Joi.number().empty(''),
     price: Joi.number(),
@@ -38,6 +39,7 @@ const updateOne = {
       Joi.string().required()
     ),
     categoryId: Joi.string().custom(customValidations.objectId).empty(''),
+    brandId: Joi.string().custom(customValidations.objectId).empty(''),
     capitalPrice: Joi.number().empty(''),
     salePrice: Joi.number().empty(''),
     price: Joi.number(),
@@ -68,7 +70,8 @@ const getOne = {
 const getList = {
   query: Joi.object().keys({
     targetId: Joi.string().custom(customValidations.objectId),
-    priceByWeight: Joi.boolean(),
+    categoryId: Joi.string().custom(customValidations.objectId).empty(''),
+    brandId: Joi.string().custom(customValidations.objectId).empty(''),
     isActive: Joi.boolean(),
     search: Joi.string().empty(''),
     ...customValidations.paginateValidation,
@@ -79,9 +82,10 @@ const getList = {
 const getAll = {
   query: Joi.object().keys({
     targetId: Joi.string().custom(customValidations.objectId),
-    search: Joi.string(),
-    sort: Joi.string(),
-    priceByWeight: Joi.boolean(),
+    search: Joi.string().empty(''),
+    categoryId: Joi.string().custom(customValidations.objectId).empty(''),
+    brandId: Joi.string().custom(customValidations.objectId).empty(''),
+    sort: Joi.string().empty(''),
     isActive: Joi.boolean(),
   }),
 };

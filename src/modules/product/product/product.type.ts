@@ -9,6 +9,7 @@ export interface IProductDoc extends IDoc {
   thumbnail: string;
   attachments: string[];
   categoryId: mongoose.Schema.Types.ObjectId;
+  brandId: mongoose.Schema.Types.ObjectId; 
   capitalPrice: number;
   salePrice: number;
   price: number;

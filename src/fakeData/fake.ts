@@ -1,147 +1,143 @@
 import {faker} from '@faker-js/faker';
 import {TABLE_USER} from '../modules/user/user.configs';
-import {getRandomInt} from '../RamdomString';
-import {OrganizationModel} from '../modules/organization/organization/organization.model';
+import { getRandomInt } from '../utils/RamdomString';
 import {UserModel} from '../modules/user/user.model';
 import {fakeImages} from './images/images';
-import {ClassModel} from '../modules/classes/classes.model';
-import {ParentModel} from '../modules/parent/parent.model';
-import {StudentModel} from '../modules/student/student.model';
-import { getNewToken } from '../../submodules/VTAuthLib/config/passport';
+import { OrganizationModel } from '../modules/organization/organization.model';
+import { BrandModel } from '../modules/brand/brand.model';
+import { CategoryModel } from '../modules/category/category.model';
+import { ProductModel } from '../modules/product/product/product.model';
+import { UnitModel } from '../modules/product/unit/unit.model';
 
-const cId = '652de593d0bcb141c425c2c9';
-const uId = '659bbe09a7b88044494a4bf2';
-const classCount = 1;
+const companyId = '652de593d0bcb141c425c2c9';
+const adminCId = '6611a315fd097185cd665704';
+const adminTId = '652fe549427be99351822536';
+const brandId = '643f7d47132d00ffe0ec7d5a';
+const categoryId = '642ee729fce32ca0f1063f2c';
+const unitId = '63f6c9c699a2dd615fd22688';
 
 const clean = async () => {
   await Promise.all([
-    OrganizationModel.deleteOne({
-      _id: cId,
-    }),
-    UserModel.deleteMany({
-      organizationId: cId,
-    }),
-    ClassModel.deleteMany({
-      targetId: cId,
-    }),
-    StudentModel.deleteMany({
-      targetId: cId,
-    }),
-    ParentModel.deleteMany({
-      targetId: cId,
-    }),
+    OrganizationModel.deleteMany(),
+    UserModel.deleteMany(),
+    CategoryModel.deleteMany(),
+    BrandModel.deleteMany(),
+    UnitModel.deleteMany(),
+    ProductModel.deleteMany(),
   ]);
 };
 
 const fake = async () => {
   const fakeOrg = async () => {
     await OrganizationModel.create({
-      _id: cId,
-      name: faker.company.name(),
-      avatar: fakeImages.compAvatar,
+      _id: companyId,
+      name: 'TC Shop',
+      thumbnail: fakeImages.compImg,
       description: faker.lorem.words(30),
     });
   };
 
   const fakeAdmin = async () => {
-    await UserModel.create({
-      _id: uId,
-      organizationId: cId,
-      name: faker.company.name(),
-      description: faker.lorem.words(30),
-
-      phone: faker.phone.number('+849########'),
-      email: faker.internet.email(), // '+48 91 463 61 70'
-      fullName: faker.name.fullName(),
-      isAdmin: true
-    })
-    console.log(getNewToken({id: uId}))
+    await UserModel.insertMany([
+      {
+        _id: adminCId,
+        CODE: 'CUONGNV01',
+        fullName: 'Admin Cường',
+        description: faker.lorem.words(30),
+        phone: '0967131906',
+        hashedPassword: '$2a$10$dpRl1imPn7s5os5YNukwCuK0oI/sMXKt0ixMJzrKkgMTOLm9nRv56',//278547E0
+        email: 'laclac10921@gmail.com',
+        isAdmin: true
+      },
+      {
+        _id: adminTId,
+        CODE: 'TANNV3201',
+        fullName: 'Admin Tân',
+        description: faker.lorem.words(30),
+        phone: '0386653766',
+        hashedPassword: '$2a$10$dpRl1imPn7s5os5YNukwCuK0oI/sMXKt0ixMJzrKkgMTOLm9nRv56',//278547E0
+        email: 'tannv.3201@gmail.com',
+        isAdmin: true
+      }
+    ])
   }
-
-  const fakeTeachers = async () => {
-    const teacherAvatars = fakeImages.others.slice(0, classCount);
-    return Promise.all(
-      teacherAvatars.map((sImage: string) =>
-        UserModel.create({
-          organizationId: cId,
-          name: faker.company.name(),
-          description: faker.lorem.words(30),
-
-          phone: faker.phone.number('+849########'),
-          email: faker.internet.email(), // '+48 91 463 61 70'
-          fullName: faker.name.fullName(),
-          // hashedPassword: string;
-          avatar: sImage,
-          // slogan: string;
-          // birthday: string;
-          // country: string;
-          // address: string;
-          // aboutme: string;
-          // website: string;
-
-          isTeacher: true,
-          createdById: uId,
-        }),
-      ),
-    );
+  const fakeBrand = async () => {
+    await BrandModel.create({
+      _id: brandId,
+      targetId: companyId,
+      targetOnModel: 'tctool_organization',
+      name: 'Bánh Tráng Trộn',
+      logo: fakeImages.productImg,
+      description: faker.lorem.words(30),
+      createdById: adminCId
+    });
+  };
+  const fakeCategory = async () => {
+    await CategoryModel.create({
+      _id: categoryId,
+      targetId: companyId,
+      targetOnModel: 'tctool_organization',
+      name: 'Bánh Tráng Trộn',
+      thumbnail: fakeImages.productImg,
+      parentId: undefined,
+      description: faker.lorem.words(30),
+      isHome: true,
+      isActive: true,
+      createdById: adminCId
+    });
   };
 
-  const fakeStudients = async () => {
-    return Promise.all(
-      fakeImages.others.map(sImg =>
-        UserModel.create({
-          organizationId: cId,
-          name: faker,
-          description: faker.name.fullName(),
-
-          phone: faker.phone.number('+849########'),
-          email: faker.internet.email(), // '+48 91 463 61 70'
-          fullName: faker.name.fullName(),
-          // hashedPassword: string;
-          avatar: sImg,
-          // slogan: string;
-          // birthday: string;
-          // country: string;
-          // address: string;
-          // aboutme: string;
-          // website: string;
-          createdById: uId,
-        }),
-      ),
-    );
+  const fakeUnit = async () => {
+    await UnitModel.create({
+      _id: unitId,
+      name: 'Túi',
+      description: 'Túi bao bóng',
+      isActive: 'true'
+    });
   };
 
-  const [org, admin, teachers, studients] = await Promise.all([fakeOrg(),fakeAdmin(), fakeTeachers(), fakeStudients()]);
-
-  const fakeClass = async (teacherIds: string[]) => {
-    return Promise.all(
-      teacherIds.map((teacherId, index) =>
-        ClassModel.create({
-          targetId: cId,
-
-          name: `Lớp 1A${index + 1}`,
-          teacherId: teacherId,
-          createdById: uId,
-        }),
-      ),
-    );
+  const fakeProduct = async () => {
+    await ProductModel.insertMany([
+      {
+        targetId: companyId,
+        targetOnModel: 'tctool_organization',
+        name: 'Bánh Tráng Trộn 1',
+        thumbnail: fakeImages.productImg,
+        attachments: [fakeImages.productImg],
+        description: faker.lorem.words(30),
+        categoryId: categoryId,
+        brandId: brandId,
+        capitalPrice: 10000,
+        salePrice: 15000,
+        price: 20000,
+        quantity: 2,
+        weight: 100,
+        unitId: unitId,
+        isActive: true,
+        createdById: adminCId
+      },
+      {
+        targetId: companyId,
+        targetOnModel: 'tctool_organization',
+        name: 'Bánh Tráng Trộn 2',
+        thumbnail: fakeImages.productImg,
+        attachments: [fakeImages.productImg],
+        description: faker.lorem.words(30),
+        categoryId: categoryId,
+        brandId: brandId,
+        capitalPrice: 12000,
+        salePrice: 17000,
+        price: 23000,
+        quantity: 5,
+        weight: 100,
+        unitId: unitId,
+        isActive: true,
+        createdById: adminCId,
+      },
+    ])
   };
 
-  const teaderIds = teachers.map(t => t.id);
-  const classList = await fakeClass(teaderIds);
-  const classItem = classList[0];
-
-  await Promise.all(
-    studients.map(sId =>
-      StudentModel.create({
-        targetId: cId,
-
-        studentId: sId,
-        classId: classItem.id,
-        createdById: uId,
-      }),
-    ),
-  );
+  const [org, admin, teachers, studients] = await Promise.all([fakeOrg(),fakeAdmin(), fakeBrand(), fakeCategory(), fakeUnit(), fakeProduct()]);
 };
 
 export const fakeData = async () => {

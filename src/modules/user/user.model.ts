@@ -5,6 +5,28 @@ import { TABLE_USER } from './user.configs';
 import { paginate, toJSON } from '../../utils/plugins';
 import { TABLE_ADDRESS } from '../address/address.configs';
 
+export async function generateUniqueCode() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let CODE = '';
+
+  // Lặp lại quá trình sinh code cho đến khi có một code duy nhất
+  while (true) {
+    for (let i = 0; i < 9; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      CODE += characters[randomIndex];
+    }
+
+    // Kiểm tra xem code đã tồn tại trong cơ sở dữ liệu chưa
+    const existingDocument = await UserModel.findOne({CODE});
+    if (!existingDocument) {
+      return CODE; // Nếu không tồn tại, trả về code mới
+    }
+
+    // Nếu tồn tại, đặt lại code và lặp lại quá trình sinh
+    CODE = '';
+  }
+}
+
 export interface IUserModelDoc extends IUserDoc { }
 interface IUserModel extends IDocModel<IUserModelDoc> { }
 
@@ -86,6 +108,14 @@ userSchema.plugin(paginate);
 // userSchema.virtual('avatarUri').get(function () {
 //   return getImageUriFromFilename(this.avatar);
 // });
+
+userSchema.pre('save', async function (next) {
+  if (!this.CODE) {
+    this.CODE = await generateUniqueCode();
+  }
+  console.log(1);
+  next();
+});
 
 userSchema.virtual('address', {
   ref: TABLE_ADDRESS,

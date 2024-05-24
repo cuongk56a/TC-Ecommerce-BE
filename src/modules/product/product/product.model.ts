@@ -5,7 +5,7 @@ import {TABLE_PRODUCT} from './product.configs';
 import {paginate, toJSON} from '../../../utils/plugins'
 import { TABLE_USER } from '../../user/user.configs';
 import { TABLE_ORGANIZATION } from '../../organization/organization.configs';
-import { TABLE_UNIT, TABLE_unit } from '../unit/unit.configs';
+import { TABLE_UNIT } from '../unit/unit.configs';
 import { TABLE_CATEGORY } from '../../category/category.configs';
 
 export interface IProductModelDoc extends IProductDoc {}
@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema<IProductModelDoc>(
   {
     targetId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: 'targetOneModel',
+      refPath: 'targetOnModel',
       required: true,
     },
     targetOnModel: {
@@ -38,6 +38,9 @@ const productSchema = new mongoose.Schema<IProductModelDoc>(
       ]
     },
     categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    brandId: {
       type: mongoose.Schema.Types.ObjectId,
     },
     capitalPrice: {

@@ -16,7 +16,7 @@ const roleSchema = new mongoose.Schema<IRoleModelDoc>(
   {
     targetId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: 'targetOneModel',
+      refPath: 'targetOnModel',
       required: true,
     },
     targetOnModel: {

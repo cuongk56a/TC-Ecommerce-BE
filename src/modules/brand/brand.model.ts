@@ -13,7 +13,7 @@ const brandSchema = new mongoose.Schema<IBrandModelDoc>(
   {
     targetId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: 'targetOneModel',
+      refPath: 'targetOnModel',
       required: true,
     },
     targetOnModel: {
