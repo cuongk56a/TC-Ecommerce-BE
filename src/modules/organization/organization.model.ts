@@ -7,6 +7,7 @@ import {getImageUriFromFilename} from '../../utils/stringUtil';
 import { hashPassword } from '../../utils/hashUtil';
 import { genCode } from '../../utils/core/genCode';
 import { TABLE_USER } from '../user/user.configs';
+import { TABLE_ADDRESS } from '../address/address.configs';
 
 export interface IOrganizationModelDoc extends IOrganizationDoc {}
 interface IOrganizationModel extends IDocModel<IOrganizationModelDoc> {}
@@ -34,11 +35,11 @@ const organizationSchema = new mongoose.Schema<IOrganizationModelDoc>(
       type: String,
       required: true
     },
-    banner: {
+    slogan: {
       type: String,
     },
-    address: {
-      type: String,
+    addressId: {
+      type: mongoose.Schema.Types.ObjectId,
       required: false,
     },
     createdById: {
@@ -69,35 +70,40 @@ organizationSchema.plugin(paginate);
 //   return getImageUriFromFilename(this.avatar);
 // });
 
-function formatPhoneNumber(phoneNumber: any) {
-  const numericPhoneNumber = phoneNumber.replace(/\D/g, '');
-
-  if (numericPhoneNumber.startsWith('0')) {
-    const formattedPhoneNumber = `+84${numericPhoneNumber.substr(1)}`;
-    return formattedPhoneNumber;
-  } else {
-    return `+${numericPhoneNumber}`;
-  }
-}
-
-organizationSchema.pre('save', async function (next) {
-  // console.log(getNewToken({id: this._id}));
-  next();
+organizationSchema.virtual('address', {
+  ref: TABLE_ADDRESS,
+  localField: 'addressId', 
+  foreignField: '_id',
+  justOne: true,
+  match: {deletedById: {$exists: false}},
 });
 
-function preUpdate() {
-  const { phone } = this.getUpdate();
-  if (!!phone) {
-    this.getUpdate().$set.phone = formatPhoneNumber(phone);
-  }
+const populateArr = ({hasAddress}: {hasAddress: boolean}) => {
+  let pA: any[] = [];
+  return pA
+    .concat(
+      !!hasAddress
+        ? {
+            path: 'address',
+            options: {hasLocation: true}
+          }
+        : [],
+    );
+};
+
+function preFind(next: any) {
+  this.populate(populateArr(this.getOptions()));
+  next();
 }
 
-organizationSchema.pre('findOneAndUpdate', preUpdate);
+organizationSchema.pre('findOne', preFind);
+organizationSchema.pre('find', preFind);
 
 // OrganizationSchema.index({CODE: 1});
 organizationSchema.index({phone: 1});
 organizationSchema.index({email: 1});
-organizationSchema.index({fullName: 'text'});
+organizationSchema.index({hotline: 1});
+organizationSchema.index({name: 'text'});
 
 /**
  * @typedef Organization

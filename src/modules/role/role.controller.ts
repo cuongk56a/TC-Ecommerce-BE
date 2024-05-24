@@ -59,8 +59,8 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 });
 
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isTeacher','isAdmin','search','roleId']);
-    const queryOptions = pick(req.query, ['sort', 'limit', 'page']);
+    const filter = pick(req.query, ['targetId', 'roleId', 'isActive']);
+    const queryOptions = pick(req.query, ['limit', 'page']);
     try {
         const data = await roleService.getList(filter, {...queryOptions});
         res.send(data);
@@ -70,7 +70,7 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 });
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isAdmin', 'isTeacher','search','roleId']);
+    const filter = pick(req.query, ['targetId', 'roleId', 'isActive']);
     try {
         const data = await roleService.getAll(filter);
         res.send(data);

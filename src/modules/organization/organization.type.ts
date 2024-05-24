@@ -7,6 +7,6 @@ export interface IOrganizationDoc extends IDoc {
   email: string;
   webUrl: string;
   thumbnail: string;
-  banner: string;
-  address: string;
+  slogan: string;
+  addressId: mongoose.Schema.Types.ObjectId;
 }

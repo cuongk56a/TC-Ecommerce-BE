@@ -51,6 +51,8 @@ const getOne = {
 const getList = {
   query: Joi.object().keys({
     targetId: Joi.string().custom(customValidations.objectId),
+    roleId: Joi.string().custom(customValidations.objectId),
+    isActive: Joi.boolean(),
     ...customValidations.paginateValidation,
   }),
 };
@@ -59,6 +61,8 @@ const getList = {
 const getAll = {
   query: Joi.object().keys({
     targetId: Joi.string().custom(customValidations.objectId),
+    roleId: Joi.string().custom(customValidations.objectId),
+    isActive: Joi.boolean(),
   }),
 };
 

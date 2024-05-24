@@ -6,10 +6,10 @@ const createOne = {
     name: Joi.string().required(),
     hotline: Joi.string().required(),
     email: Joi.string().email().required(),
-    webUrl: Joi.string(),
+    webUrl: Joi.string().empty(''),
     thumbnail: Joi.string().required(),
-    banner: Joi.string(),
-    address: Joi.string(),
+    slogan: Joi.string(),
+    addressId: Joi.string().custom(customValidations.objectId),
     ...customValidations.createEntityValidation,
   }),
 };
@@ -23,9 +23,9 @@ const updateOne = {
     hotline: Joi.string(),
     email: Joi.string().email(),
     webUrl: Joi.string().empty(''),
-    thumbnail: Joi.string(),
-    banner: Joi.string().empty(''),
-    address: Joi.string().empty(''),
+    thumbnail: Joi.string().required(),
+    slogan: Joi.string(),
+    addressId: Joi.string().custom(customValidations.objectId),
     ...customValidations.updateEntityValidation,
   }),
 };
@@ -48,7 +48,10 @@ const getOne = {
 
 const getList = {
   query: Joi.object().keys({
-    organizationId: Joi.string().custom(customValidations.objectId),
+    name: Joi.string(),
+    hotline: Joi.string(),
+    search: Joi.string().empty(''),
+    hasAddress: Joi.boolean(),
     ...customValidations.paginateValidation,
   }),
 };
@@ -56,7 +59,10 @@ const getList = {
 
 const getAll = {
   query: Joi.object().keys({
-    organizationId: Joi.string().custom(customValidations.objectId),
+    name: Joi.string(),
+    hotline: Joi.string(),
+    search: Joi.string().empty(''),
+    hasAddress: Joi.boolean(),
   }),
 };
 

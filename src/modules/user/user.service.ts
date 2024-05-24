@@ -32,7 +32,7 @@ const getList = async (filter: any, options?: any): Promise<IUserDoc[]> => {
       deletedById: {$exists: false},
     },
     {sort: {createdAt: -1}, ...options},
-  );
+  ).select({isAdmin: 0});
 };
 
 const getAll = async (filter: any, options?: any): Promise<IUserDoc[]> => {
@@ -43,7 +43,7 @@ const getAll = async (filter: any, options?: any): Promise<IUserDoc[]> => {
     },
     undefined,
     {sort: {createdAt: -1}, ...options},
-  );
+  ).select({isAdmin: 0});
 };
 
 export const userService = {

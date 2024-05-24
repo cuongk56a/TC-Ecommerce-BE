@@ -15,6 +15,7 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
         throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
         }
         res.send(data);
+        next();
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
     }

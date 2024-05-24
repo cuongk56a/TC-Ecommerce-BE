@@ -59,10 +59,11 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 });
 
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isTeacher','isAdmin','search','organizationId']);
+    const filter = pick(req.query, ['search', 'phone', 'email']);
+    const options = pick(req.query, ['hasAddress', 'hasOrganization']);
     const queryOptions = pick(req.query, ['sort', 'limit', 'page']);
     try {
-        const data = await userService.getList(filter, {...queryOptions});
+        const data = await userService.getList(filter, {...queryOptions, options});
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
@@ -70,9 +71,10 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 });
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isAdmin', 'isTeacher','search','organizationId']);
+    const filter = pick(req.query, ['search', 'phone', 'email']);
+    const options = pick(req.query, ['hasAddress', 'hasOrganization']);
     try {
-        const data = await userService.getAll(filter);
+        const data = await userService.getAll(filter, options);
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));

@@ -1,13 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { roleService } from "../modules/role/role.service";
 import httpStatus from 'http-status';
+import { UserModel } from '../modules/user/user.model';
 
 export const checkPermission = (permission:string) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const { roleCheckId } = req.body;
+        const { roleCheckId} = req.body;
+        const { userId } = req.userId
         try {
-            const role = await roleService.getOne({_id: roleCheckId});
-            if (!!role && role.permissions.includes(permission)) {
+            const [role, user] = await Promise.all([
+                roleService.getOne({_id: roleCheckId}),
+                UserModel.findOne({_id: userId})
+            ]) 
+            if ((!!role && role.permissions.includes(permission)) || user?.isAdmin === true) {
                 next();
             } else {
                 return res.status(httpStatus.UNAUTHORIZED).send('Not Have Authorized!');

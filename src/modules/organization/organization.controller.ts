@@ -59,10 +59,11 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 });
 
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isTeacher','isAdmin','search','organizationId']);
-    const queryOptions = pick(req.query, ['sort', 'limit', 'page']);
+    const filter = pick(req.query, ['name', 'hotline', 'search']);
+    const options = pick(req.query, ['hasAddress']);
+    const queryOptions = pick(req.query, ['limit', 'page']);
     try {
-        const data = await organizationService.getList(filter, {...queryOptions});
+        const data = await organizationService.getList(filter, {...queryOptions, options});
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
@@ -70,9 +71,10 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 });
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isAdmin', 'isTeacher','search','organizationId']);
+    const filter = pick(req.query, ['name', 'hotline']);
+    const options = pick(req.query, ['hasAddress']);
     try {
-        const data = await organizationService.getAll(filter);
+        const data = await organizationService.getAll(filter, options);
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));

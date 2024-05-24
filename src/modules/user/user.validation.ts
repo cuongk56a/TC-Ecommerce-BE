@@ -4,17 +4,14 @@ import { UserGender } from './user.type';
 
 const createOne = {
   body: Joi.object().keys({
+    phone: Joi.string().required(),
+    hashedPassword: Joi.string().required(),
     fullName: Joi.string().required(),
-    avatar: Joi.string(),
-    hashedPassword: Joi.string(),
-    phone: Joi.string(),
-    email: Joi.string(),
-    birthday: Joi.string(),
-    gender: Joi.string().valid(...Object.values(UserGender)),
-    address: Joi.string(),
-    isTeacher: Joi.boolean(),
-    importCode: Joi.string(),
-    organizationId: Joi.string().custom(customValidations.objectId),
+    email: Joi.string().required(),
+    avatar: Joi.string().empty(''),
+    birthday: Joi.string().empty(''),
+    gender: Joi.string().valid(...Object.values(UserGender)).default(UserGender.OTHER),
+    addressId: Joi.string().custom(customValidations.objectId).empty(''),
     ...customValidations.createEntityValidation,
   }),
 };
@@ -24,18 +21,14 @@ const updateOne = {
     userId: Joi.string().custom(customValidations.objectId).required(),
   }),
   body: Joi.object().keys({
-    fullName: Joi.string(),
-    avatar: Joi.string(),
-    hashedPassword: Joi.string(),
     phone: Joi.string(),
+    hashedPassword: Joi.string(),
+    fullName: Joi.string(),
     email: Joi.string(),
+    avatar: Joi.string().empty(''),
     birthday: Joi.string(),
     gender: Joi.string().valid(...Object.values(UserGender)),
-    country: Joi.string(),
-    address: Joi.string(),
-    organizationId: Joi.string().custom(customValidations.objectId),
-    isAdmin: Joi.boolean(),
-    isTeacher: Joi.boolean(),
+    addressId: Joi.string().custom(customValidations.objectId),
     ...customValidations.updateEntityValidation,
   }),
 };
@@ -55,17 +48,18 @@ const getOne = {
     userId: Joi.string().custom(customValidations.objectId).required(),
   }),
   query: Joi.object().keys({
-    hasStudent: Joi.boolean(),
+    hasLocation: Joi.boolean(),
   }),
 };
 
 const getList = {
   query: Joi.object().keys({
     organizationId: Joi.string().custom(customValidations.objectId),
-    search: Joi.string(),
-    isAdmin: Joi.boolean(),
-    isTeacher: Joi.boolean(),
-    hasSubject: Joi.boolean(),
+    phone: Joi.string().empty(''),
+    email: Joi.string().empty(''),
+    hasLocation: Joi.boolean(),
+    hasOrganization: Joi.boolean(),
+    search: Joi.string().empty(''),
     ...customValidations.paginateValidation,
   }),
 };
@@ -74,8 +68,10 @@ const getList = {
 const getAll = {
   query: Joi.object().keys({
     organizationId: Joi.string().custom(customValidations.objectId),
-    isAdmin: Joi.boolean(),
-    isTeacher: Joi.boolean(),
+    phone: Joi.string().empty(''),
+    email: Joi.string().empty(''),
+    hasLocation: Joi.boolean(),
+    hasOrganization: Joi.boolean(),
     search: Joi.string().empty(''),
   }),
 };

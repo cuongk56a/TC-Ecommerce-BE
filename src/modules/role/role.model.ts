@@ -43,6 +43,7 @@ const roleSchema = new mongoose.Schema<IRoleModelDoc>(
     createdById: {
       type: mongoose.Schema.Types.ObjectId,
       ref: TABLE_USER,
+      required: true,
     },
     updatedById: {
       type: mongoose.Schema.Types.ObjectId,
@@ -73,6 +74,26 @@ roleSchema.virtual('users', {
   justOne: false, // and return only one
   match: {deletedById: {$exists: false}},
 });
+
+const populateArr = ({hasUser}: {hasUser: boolean;}) => {
+  let pA: any[] = [];
+  return pA
+    .concat(
+      !!hasUser
+        ? {
+            path: 'users',
+          }
+        : [],
+    );
+};
+
+function preFind(next: any) {
+  this.populate(populateArr(this.getOptions()));
+  next();
+}
+
+roleSchema.pre('findOne', preFind);
+roleSchema.pre('find', preFind);
 
 /**
  * @typedef Role

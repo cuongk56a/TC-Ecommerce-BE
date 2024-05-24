@@ -44,7 +44,7 @@ const phone = (phone: string, helpers: any) => {
 };
 
 const paginateValidation = {
-  sort: Joi.string(),
+  sort: Joi.string().empty(''),
   limit: Joi.number().integer(),
   page: Joi.number().integer(),
 };
