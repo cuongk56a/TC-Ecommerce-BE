@@ -4,8 +4,6 @@ import { TABLE_ORGANIZATION } from '../organization/organization.configs';
 
 const createOne = {
   body: Joi.object().keys({
-    targetId: Joi.string().custom(customValidations.objectId).required(),
-    targetOnModel: Joi.string().valid(TABLE_ORGANIZATION).default(TABLE_ORGANIZATION),
     parentId: Joi.string().custom(customValidations.objectId).empty(''),
 
     name: Joi.string().required(),
@@ -55,8 +53,6 @@ const getOne = {
 
 const getList = {
   query: Joi.object().keys({
-    targetId: Joi.string().custom(customValidations.objectId),
-    targetOnModel: Joi.string().valid(TABLE_ORGANIZATION),
     parentId: Joi.string().custom(customValidations.objectId),
     isActive: Joi.boolean(),
     inHome: Joi.boolean(),
@@ -72,8 +68,6 @@ const getAll = {
   query: Joi.object().keys({
     ids: Joi.string(),
     parentId: Joi.string().custom(customValidations.objectId),
-    targetId: Joi.string().custom(customValidations.objectId),
-    targetOnModel: Joi.string().valid(TABLE_ORGANIZATION),
     isActive: Joi.boolean(),
     inHome: Joi.boolean(),
     search: Joi.string().empty(''),

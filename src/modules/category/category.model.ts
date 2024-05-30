@@ -12,17 +12,6 @@ interface ICategoryModel extends IDocModel<ICategoryModelDoc> {}
 
 const categorySchema = new mongoose.Schema<ICategoryModelDoc>(
   {
-    targetId: {
-      type: mongoose.Schema.Types.ObjectId,
-      refPath: 'targetOnModel',
-      required: true,
-    },
-    targetOnModel: {
-      //model of targetId
-      type: String,
-      enum: [TABLE_ORGANIZATION],
-      default: TABLE_ORGANIZATION,
-    },
     name: {
       type: String,
       required: true,

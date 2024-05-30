@@ -75,8 +75,6 @@ const fake = async () => {
   const fakeCategory = async () => {
     await CategoryModel.create({
       _id: categoryId,
-      targetId: companyId,
-      targetOnModel: 'tctool_organization',
       name: 'Bánh Tráng Trộn',
       thumbnail: fakeImages.productImg,
       parentId: undefined,
