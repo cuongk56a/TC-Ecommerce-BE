@@ -40,7 +40,7 @@ import cloudinary from '../../config/cloudinary';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Thư mục lưu trữ file
+    cb(null, '../../uploads/'); // Thư mục lưu trữ file
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
