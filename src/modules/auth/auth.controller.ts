@@ -108,7 +108,7 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
   try {
     const [confirmCode, newPassword] = await Promise.all([getRedisCode(email), genCode(4)]);
     if (confirmCode !== code) {
-      res.status(httpStatus.BAD_REQUEST).send({code: httpStatus.BAD_REQUEST, status: 'Error', message: 'Mã xác thực không đúng!'});
+      res.status(httpStatus.OK).send({code: httpStatus.BAD_REQUEST, status: 'Error', message: 'Mã xác thực không đúng!'});
     } else {
       const hashedPassword = await hashPassword('newPassword');
       await userService.updateOne(
