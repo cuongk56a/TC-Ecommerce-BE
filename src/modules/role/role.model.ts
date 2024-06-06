@@ -3,9 +3,6 @@ import {IRoleDoc} from './role.type';
 import { IDocModel } from '../../utils/types/entityTypes';
 import {TABLE_ROLE} from './role.configs';
 import {paginate, toJSON} from '../../utils/plugins'
-import {getImageUriFromFilename} from '../../utils/stringUtil';
-import { hashPassword } from '../../utils/hashUtil';
-import { genCode } from '../../utils/core/genCode';
 import { TABLE_USER } from '../user/user.configs';
 import { TABLE_ORGANIZATION } from '../organization/organization.configs';
 

@@ -5,6 +5,7 @@ import {TABLE_BRAND} from './brand.configs';
 import {paginate, toJSON} from '../../utils/plugins'
 import { TABLE_USER } from '../user/user.configs';
 import { TABLE_ORGANIZATION } from '../organization/organization.configs';
+import { getImageUriFromFilename } from '../../utils/core/stringUtil';
 
 export interface IBrandModelDoc extends IBrandDoc {}
 interface IBrandModel extends IDocModel<IBrandModelDoc> {}
@@ -52,6 +53,10 @@ const brandSchema = new mongoose.Schema<IBrandModelDoc>(
     toObject: {virtuals: true},
   },
 );
+
+brandSchema.virtual('logoUri').get(async function () {
+  return await getImageUriFromFilename(this.logo || '');
+});
 
 brandSchema.plugin(toJSON);
 brandSchema.plugin(paginate);

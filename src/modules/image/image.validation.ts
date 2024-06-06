@@ -1,29 +1,27 @@
 import Joi from 'joi';
 import {customValidations} from '../../utils/validations/custom.validation';
-import { TABLE_ORGANIZATION } from '../organization/organization.configs';
 
-const createOrUpdateOne = {
+const createOrUpdateMany = {
   body: Joi.object().keys({
-    fileName: Joi.string().required(),
-    ...customValidations.createEntityValidation,
+    images: Joi.array().items(Joi.string())
   }),
 };
 
-const getList = {
-  query: Joi.object().keys({
-    fileName: Joi.string().empty(''),
-    ...customValidations.paginateValidation,
+const getOne = {
+  params: Joi.object().keys({
+    fileName: Joi.string().required(),
   }),
 };
 
 
 const getAll = {
   query: Joi.object().keys({
+    fileName: Joi.string().empty(''),
   }),
 };
 
 export const imageValidation = {
-  createOrUpdateOne,
+  createOrUpdateMany,
+  getOne,
   getAll,
-  getList,
 };

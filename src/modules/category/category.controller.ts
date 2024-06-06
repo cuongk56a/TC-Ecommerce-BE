@@ -4,7 +4,7 @@ import ApiError from '../../utils/core/ApiError';
 import { catchAsync } from '../../utils/core/catchAsync';
 import { pick } from '../../utils/core/pick';
 import { categoryService } from './category.service';
-import { uniq } from '../../utils/stringUtil';
+import { uniq } from '../../utils/core/stringUtil';
 
 const createOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   try {

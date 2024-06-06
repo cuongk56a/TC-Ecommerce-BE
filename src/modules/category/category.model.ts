@@ -4,8 +4,7 @@ import { IDocModel } from '../../utils/types/entityTypes';
 import {TABLE_CATEGORY} from './category.configs';
 import {paginate, toJSON} from '../../utils/plugins'
 import { TABLE_USER } from '../user/user.configs';
-import { TABLE_ORGANIZATION } from '../organization/organization.configs';
-import { getImageUriFromFilename } from '../../utils/stringUtil';
+import { getImageUriFromFilename } from '../../utils/core/stringUtil';
 
 export interface ICategoryModelDoc extends ICategoryDoc {}
 interface ICategoryModel extends IDocModel<ICategoryModelDoc> {}
@@ -60,6 +59,10 @@ const categorySchema = new mongoose.Schema<ICategoryModelDoc>(
     toObject: {virtuals: true},
   },
 );
+
+categorySchema.virtual('thumbnailUri').get(async function () {
+  return await getImageUriFromFilename(this.thumbnail || '');
+});
 
 categorySchema.virtual('child', {
   ref: TABLE_CATEGORY, // The model to use, conditional on the doc

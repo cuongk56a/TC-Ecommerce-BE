@@ -19,7 +19,7 @@ export const getRedisAsync = async (key: string) => {
     return value;
 };
 
-export const setRedisAsync = async (key: string, value: string) => {
+export const setRedisAsync = async (key: string, value: any) => {
     await client.set(key, value);
 };
 

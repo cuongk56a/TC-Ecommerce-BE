@@ -5,6 +5,7 @@ import {TABLE_BANNER} from './banner.configs';
 import {paginate, toJSON} from '../../utils/plugins'
 import { TABLE_USER } from '../user/user.configs';
 import { TABLE_ORGANIZATION } from '../organization/organization.configs';
+import { getImageUriFromFilename } from '../../utils/core/stringUtil';
 
 export interface IBannerModelDoc extends IBannerDoc {}
 interface IBannerModel extends IDocModel<IBannerModelDoc> {}
@@ -61,12 +62,12 @@ const bannerSchema = new mongoose.Schema<IBannerModelDoc>(
   },
 );
 
+bannerSchema.virtual('thumbnailUri').get(function () {
+  return getImageUriFromFilename(this.thumbnail || "");
+});
+
 bannerSchema.plugin(toJSON);
 bannerSchema.plugin(paginate);
-
-// bannerSchema.virtual('thumbnailUri').get(function () {
-//   return getImageUriFromFilename(this.thumbnail || "");
-// });
 
 const populateArr = ({hasUnit, hasCategory}: {hasUnit: boolean, hasCategory: boolean}) => {
   let pA: any[] = [];

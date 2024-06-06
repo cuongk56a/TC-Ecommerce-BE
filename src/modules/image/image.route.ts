@@ -8,13 +8,17 @@ import {
 import {validate} from '../../middlewares/validate';
 import {imageController} from './image.controller';
 import {imageValidation} from './image.validation';
+import upload from './image.configs';
 
 const router = express.Router()
 
 router
     .route('/')
-    .post(auth(),addCreatedByIdToBody,validate(imageValidation.createOrUpdateOne),imageController.createOrUpdateOne)
-    .get(validate(imageValidation.getList),imageController.getList);
+    .post(validate(imageValidation.createOrUpdateMany),upload.array('images', 10),imageController.createOrUpdateMany);
+
+router
+    .route('/:fileName')
+    .get(validate(imageValidation.getOne),imageController.getOne);
 
 router.route('/all').get(auth(),validate(imageValidation.getAll),imageController.getAll);
 

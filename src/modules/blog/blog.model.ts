@@ -5,6 +5,7 @@ import {TABLE_BLOG} from './blog.configs';
 import {paginate, toJSON} from '../../utils/plugins'
 import { TABLE_USER } from '../user/user.configs';
 import { TABLE_ORGANIZATION } from '../organization/organization.configs';
+import { getImageUriFromFilename } from '../../utils/core/stringUtil';
 
 export interface IBlogModelDoc extends IBlogDoc {}
 interface IBlogModel extends IDocModel<IBlogModelDoc> {}
@@ -55,6 +56,10 @@ const blogSchema = new mongoose.Schema<IBlogModelDoc>(
     toObject: {virtuals: true},
   },
 );
+
+blogSchema.virtual('thumbnailUri').get(async function () {
+  return await getImageUriFromFilename(this.thumbnail || '');
+});
 
 blogSchema.plugin(toJSON);
 blogSchema.plugin(paginate);

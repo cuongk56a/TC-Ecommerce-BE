@@ -4,6 +4,7 @@ import { IDocModel } from '../../utils/types/entityTypes';
 import { TABLE_USER } from './user.configs';
 import { paginate, toJSON } from '../../utils/plugins';
 import { TABLE_ADDRESS } from '../address/address.configs';
+import { getImageUriFromFilename } from '../../utils/core/stringUtil';
 
 export async function generateUniqueCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -102,12 +103,12 @@ const userSchema = new mongoose.Schema<IUserModelDoc>(
   },
 );
 
+userSchema.virtual('avatarUri').get(async function () {
+  return await getImageUriFromFilename(this.avatar || '');
+});
+
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
-
-// userSchema.virtual('avatarUri').get(function () {
-//   return getImageUriFromFilename(this.avatar);
-// });
 
 userSchema.pre('save', async function (next) {
   if (!this.CODE) {

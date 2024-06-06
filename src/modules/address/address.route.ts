@@ -8,12 +8,13 @@ import {
 import {validate} from '../../middlewares/validate';
 import {addressController} from './address.controller';
 import {addressValidation} from './address.validation';
+import { authIfHas } from '../../middlewares/authIfHas';
 
 const router = express.Router()
 
 router
     .route('/')
-    .post(auth(),addCreatedByIdToBody,validate(addressValidation.createOne),addressController.createOne)
+    .post(authIfHas(),addCreatedByIdToBody,validate(addressValidation.createOne),addressController.createOne)
     .get(validate(addressValidation.getList),addressController.getList);
 
 router.route('/all').get(auth(),validate(addressValidation.getAll),addressController.getAll);
@@ -21,8 +22,8 @@ router.route('/all').get(auth(),validate(addressValidation.getAll),addressContro
 router
     .route('/:addressId')
     .get(validate(addressValidation.getOne), addressController.getOne)
-    .patch(auth(), addUpdatedByIdToBody, validate(addressValidation.updateOne), addressController.updateOne)
-    .delete(auth(), addDeletedByToBody, validate(addressValidation.deleteOne), addressController.deleteOne)
+    .patch(authIfHas(), addUpdatedByIdToBody, validate(addressValidation.updateOne), addressController.updateOne)
+    .delete(authIfHas(), addDeletedByToBody, validate(addressValidation.deleteOne), addressController.deleteOne)
 
 export const addressRoute = router;
 

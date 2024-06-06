@@ -65,6 +65,11 @@ const getOne = {
   params: Joi.object().keys({
     productId: Joi.string().custom(customValidations.objectId).required(),
   }),
+  query: Joi.object().keys({
+    hasUnit: Joi.boolean(),
+    hasCategory: Joi.boolean(),
+    hasBrand: Joi.boolean(),
+  }),
 };
 
 const getList = {
@@ -74,6 +79,9 @@ const getList = {
     brandId: Joi.string().custom(customValidations.objectId).empty(''),
     isActive: Joi.boolean(),
     search: Joi.string().empty(''),
+    hasUnit: Joi.boolean(),
+    hasCategory: Joi.boolean(),
+    hasBrand: Joi.boolean(),
     ...customValidations.paginateValidation,
   }),
 };
@@ -87,6 +95,9 @@ const getAll = {
     brandId: Joi.string().custom(customValidations.objectId).empty(''),
     sort: Joi.string().empty(''),
     isActive: Joi.boolean(),
+    hasUnit: Joi.boolean(),
+    hasCategory: Joi.boolean(),
+    hasBrand: Joi.boolean(),
   }),
 };
 

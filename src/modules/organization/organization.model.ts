@@ -3,11 +3,9 @@ import {IOrganizationDoc} from './organization.type';
 import { IDocModel } from '../../utils/types/entityTypes';
 import {TABLE_ORGANIZATION} from './organization.configs';
 import {paginate, toJSON} from '../../utils/plugins'
-import {getImageUriFromFilename} from '../../utils/stringUtil';
-import { hashPassword } from '../../utils/hashUtil';
-import { genCode } from '../../utils/core/genCode';
 import { TABLE_USER } from '../user/user.configs';
 import { TABLE_ADDRESS } from '../address/address.configs';
+import { getImageUriFromFilename } from '../../utils/core/stringUtil';
 
 export interface IOrganizationModelDoc extends IOrganizationDoc {}
 interface IOrganizationModel extends IDocModel<IOrganizationModelDoc> {}
@@ -63,12 +61,12 @@ const organizationSchema = new mongoose.Schema<IOrganizationModelDoc>(
   },
 );
 
+organizationSchema.virtual('thumbnailUri').get(async function () {
+  return await getImageUriFromFilename(this.thumbnail || '');
+});
+
 organizationSchema.plugin(toJSON);
 organizationSchema.plugin(paginate);
-
-// OrganizationSchema.virtual('avatarUri').get(function () {
-//   return getImageUriFromFilename(this.avatar);
-// });
 
 organizationSchema.virtual('address', {
   ref: TABLE_ADDRESS,

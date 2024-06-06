@@ -28,8 +28,11 @@ const envVarsSchema = Joi.object()
       .default(10)
       .description('minutes after which reset password token expires'),
     JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
-      .default(10)
+      .default(5)
       .description('minutes after which verify email token expires'),
+    JWT_SET_IMAGE_DAY: Joi.number()
+      .default(1)
+      .description('day after set image'),
     EMAIL: Joi.string().email().required(),
     PASS: Joi.string().required(),
     SERVICE_FILE_URI: Joi.string().required(),
@@ -73,6 +76,7 @@ export const appConfigs = {
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+    dayAfterSetImage: envVars.JWT_SET_IMAGE_DAY,
   },
   google: {
     email: envVars.EMAIL,
@@ -81,4 +85,9 @@ export const appConfigs = {
   services: {
     svFile: envVars.SERVICE_FILE_URI,
   },
+  cloudinary: {
+    cloudName:envVars.cloud_name,
+    cloudApiKey: envVars.cloud_api_key,
+    cloudApiSecret:envVars.cloud_api_secret,
+  }
 };

@@ -81,6 +81,13 @@ const getOne = {
   params: Joi.object().keys({
     orderId: Joi.string().custom(customValidations.objectId).required(),
   }),
+  query: Joi.object().keys({
+    hasCreatedBy: Joi.boolean(),
+    hasShippingAddress: Joi.boolean(),
+    hasVouchers: Joi.boolean(),
+    hasItems: Joi.boolean(),
+    ...customValidations.paginateValidation,
+  }),
 };
 
 const getList = {
@@ -89,7 +96,7 @@ const getList = {
     targetOnModel: Joi.string().valid(TABLE_ORGANIZATION),
     CODE: Joi.string().empty(''),
     status: Joi.string().valid(...Object.values(STATUS_ORDER_TYPE)),
-    hasCreated: Joi.boolean(),
+    hasCreatedBy: Joi.boolean(),
     hasShippingAddress: Joi.boolean(),
     hasVouchers: Joi.boolean(),
     hasItems: Joi.boolean(),
@@ -104,7 +111,7 @@ const getAll = {
     targetOnModel: Joi.string().valid(TABLE_ORGANIZATION),
     CODE: Joi.string().empty(''),
     status: Joi.string().valid(...Object.values(STATUS_ORDER_TYPE)),
-    hasCreated: Joi.boolean(),
+    hasCreatedBy: Joi.boolean(),
     hasShippingAddress: Joi.boolean(),
     hasVouchers: Joi.boolean(),
     hasItems: Joi.boolean(),

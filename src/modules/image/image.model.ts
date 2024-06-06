@@ -11,14 +11,39 @@ interface IImageModel extends IDocModel<IImageModelDoc> {}
 
 const imageSchema = new mongoose.Schema<IImageModelDoc>(
   {
+    originalName: {
+      type: String,
+      required: true
+    },
     fileName: {
       type: String,
+      required: true
+    },
+    path: {
+      type: String,
+      required: true
+    },
+    size: {
+      type: Number,
+      required: true
+    },
+    mimetype: {
+      type: String,
+      required: true
+    },
+    fileExtension: {
+      type: String,
+      required: true
+    },
+    fileType: {
+      type: String,
+      default: "image",
       required: true
     },
     createdById: {
       type: mongoose.Schema.Types.ObjectId,
       ref: TABLE_USER,
-      required: true,
+      required: false,
     },
     updatedById: {
       type: mongoose.Schema.Types.ObjectId,

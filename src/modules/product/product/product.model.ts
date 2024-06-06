@@ -7,6 +7,9 @@ import { TABLE_USER } from '../../user/user.configs';
 import { TABLE_ORGANIZATION } from '../../organization/organization.configs';
 import { TABLE_UNIT } from '../unit/unit.configs';
 import { TABLE_CATEGORY } from '../../category/category.configs';
+import { getImageUriFromFilename } from '../../../utils/core/stringUtil';
+import { TABLE_BRAND } from '../../brand/brand.configs';
+import { TABLE_ORDER } from '../../order/order.configs';
 
 export interface IProductModelDoc extends IProductDoc {}
 interface IProductModel extends IDocModel<IProductModelDoc> {}
@@ -92,7 +95,13 @@ productSchema.plugin(toJSON);
 productSchema.plugin(paginate);
 
 productSchema.index({targetId: 1});
+productSchema.index({categoryId: 1});
+productSchema.index({brandId: 1});
 productSchema.index({name: 'text'});
+
+productSchema.virtual('thumbnailUri').get( async function () {
+  return await getImageUriFromFilename(this.thumbnail || '');
+});
 
 productSchema.virtual('unit', {
   ref: TABLE_UNIT,
@@ -110,7 +119,24 @@ productSchema.virtual('category', {
   match: {deletedById: {$exists: false}},
 });
 
-const populateArr = ({hasUnit, hasCategory}: {hasUnit: boolean, hasCategory: boolean}) => {
+productSchema.virtual('brand', {
+  ref: TABLE_BRAND,
+  localField: 'brandId', 
+  foreignField: '_id',
+  justOne: true,
+  match: {deletedById: {$exists: false}},
+});
+
+productSchema.virtual('countOrder', {
+  ref: TABLE_ORDER,
+  localField: '_id', 
+  foreignField: 'cart.productId',
+  justOne: false,
+  match: {deletedById: {$exists: false}},
+  count: true,
+});
+
+const populateArr = ({hasUnit, hasCategory, hasBrand}: {hasUnit: boolean, hasCategory: boolean, hasBrand: boolean}) => {
   let pA: any[] = [];
   return pA
     .concat(
@@ -124,6 +150,13 @@ const populateArr = ({hasUnit, hasCategory}: {hasUnit: boolean, hasCategory: boo
       !!hasCategory
         ? {
             path: 'category',
+          }
+        : [],
+    )
+    .concat(
+      !!hasBrand
+        ? {
+            path: 'brand',
           }
         : [],
     );

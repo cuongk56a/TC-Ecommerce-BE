@@ -25,24 +25,24 @@ const getOne = async (filter: any, options?: any): Promise<IProductDoc | null> =
   return ProductModel.findOne(filter, undefined, options);
 };
 
-const getList = async (filter: any, options?: any): Promise<IProductDoc[]> => {
+const getList = async (filter: any, options?: any, sortOptions?: any): Promise<IProductDoc[]> => {
   return ProductModel.paginate(
     {
       ...filter,
       deletedById: {$exists: false},
     },
-    {sort: {createdAt: -1}, ...options},
+    {sort: {...sortOptions,createdAt: -1}, ...options},
   );
 };
 
-const getAll = async (filter: any, options?: any): Promise<IProductDoc[]> => {
+const getAll = async (filter: any, options?: any, sortOptions?: any): Promise<IProductDoc[]> => {
   return ProductModel.find(
     {
       deletedById: {$exists: false},
       ...filter,
     },
     undefined,
-    {sort: {createdAt: -1}, ...options},
+    {sort: {...sortOptions, createdAt: -1}, ...options},
   );
 };
 

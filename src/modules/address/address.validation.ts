@@ -56,6 +56,7 @@ const getList = {
   query: Joi.object().keys({
     createdById: Joi.string().custom(customValidations.objectId),
     hasLocation: Joi.boolean(),
+    isDefault: Joi.boolean(),
     ...customValidations.paginateValidation,
   }),
 };
@@ -65,6 +66,7 @@ const getAll = {
   query: Joi.object().keys({
     createdById: Joi.string().custom(customValidations.objectId),
     hasLocation: Joi.boolean(),
+    isDefault: Joi.boolean(),
     sort: Joi.string().empty('')
   }),
 };

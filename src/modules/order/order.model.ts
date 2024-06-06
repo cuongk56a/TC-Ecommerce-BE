@@ -5,6 +5,8 @@ import {TABLE_ORDER} from './order.configs';
 import {paginate, toJSON} from '../../utils/plugins'
 import { TABLE_USER } from '../user/user.configs';
 import { TABLE_ORGANIZATION } from '../organization/organization.configs';
+import { TABLE_ADDRESS } from '../address/address.configs';
+import { TABLE_PRODUCT } from '../product/product/product.configs';
 
 export interface IOrderModelDoc extends IOrderDoc {}
 interface IOrderModel extends IDocModel<IOrderModelDoc> {}
@@ -120,6 +122,73 @@ orderSchema.plugin(paginate);
 
 orderSchema.index({CODE: 1});
 orderSchema.index({targetId: 1});
+
+orderSchema.virtual('shippingAddress', {
+  ref: TABLE_ADDRESS,
+  localField: 'shippingAddressId', 
+  foreignField: '_id',
+  justOne: true,
+  // match: {deletedById: {$exists: false}},
+});
+
+orderSchema.virtual('items', {
+  ref: TABLE_PRODUCT,
+  localField: 'cart.productId', 
+  foreignField: '_id',
+  justOne: true,
+  // match: {deletedById: {$exists: false}},
+});
+
+orderSchema.virtual('createdBy', {
+  ref: TABLE_USER,
+  localField: 'createdById', 
+  foreignField: '_id',
+  justOne: true,
+  // match: {deletedById: {$exists: false}},
+});
+
+// orderSchema.virtual('vouchers', {
+//   ref: TABLE_VOUCHER,
+//   localField: 'voucherIds', 
+//   foreignField: '_id',
+//   justOne: false,
+//   // match: {deletedById: {$exists: false}},
+// });
+
+const populateArr = ({hasShippingAddress, hasItems, hasCreatedBy}: {hasShippingAddress: boolean, hasItems: boolean, hasCreatedBy: boolean}) => {
+  let pA: any[] = [];
+  return pA
+    .concat(
+      !!hasShippingAddress
+        ? {
+            path: 'shippingAddress',
+            options: {hasLocation: true}
+          }
+        : [],
+    )
+    .concat(
+      !!hasItems
+        ? {
+            path: 'items',
+          }
+        : [],
+    )
+    .concat(
+      !!hasCreatedBy
+        ? {
+            path: 'createdBy',
+          }
+        : [],
+    );
+};
+
+function preFind(next: any) {
+  this.populate(populateArr(this.getOptions()));
+  next();
+}
+
+orderSchema.pre('findOne', preFind);
+orderSchema.pre('find', preFind);
 
 /**
  * @typedef Order

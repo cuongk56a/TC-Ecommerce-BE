@@ -16,7 +16,7 @@ router
     .post(auth(),addCreatedByIdToBody,validate(organizationValidation.createOne),organizationController.createOne)
     .get(validate(organizationValidation.getList),organizationController.getList);
 
-router.route('/all').get(auth(),validate(organizationValidation.getAll),organizationController.getAll);
+router.route('/all').get(validate(organizationValidation.getAll),organizationController.getAll);
 
 router
     .route('/:organizationId')

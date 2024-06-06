@@ -55,9 +55,11 @@ const deleteOne = catchAsync(async (req: Request, res: Response, next: NextFunct
 
 const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const {orderId} = req.params;
+    const options = pick(req.query, ['hasCreatedBy','hasItems','hasShippingAddress', 'hasVouchers'])
     try {
         const data = await orderService.getOne(
             {_id: orderId},
+            {...options}
         );
         if (!data) {
             throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
@@ -71,8 +73,9 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const filter = pick(req.query, ['createdById', 'CODE','paymentMethod','targetId', 'status']);
     const queryOptions = pick(req.query, ['limit', 'page']);
+    const options = pick(req.query, ['hasCreatedBy','hasItems','hasShippingAddress', 'hasVouchers']);
     try {
-        const data = await orderService.getList(filter, {...queryOptions});
+        const data = await orderService.getList(filter, {...queryOptions, ...options});
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
@@ -81,8 +84,9 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const filter = pick(req.query, ['createdById', 'CODE','paymentMethod','targetId', 'status']);
+    const options = pick(req.query, ['hasCreatedBy','hasItems','hasShippingAddress', 'hasVouchers']);
     try {
-        const data = await orderService.getAll(filter);
+        const data = await orderService.getAll(filter, options);
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
