@@ -13,36 +13,62 @@ const register = {
 };
 
 const login = {
-  email: Joi.string().email().required(),
-  password: Joi.string().required(),
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  })
 }
 
 const changePassword = {
-  password: Joi.string().required(),
-  newPassword: Joi.string().required(),
-  cfNewPassword: Joi.string().required(),
-  userId: Joi.string().custom(customValidations.objectId).required(),
+  body: Joi.object().keys({
+    password: Joi.string().required(),
+    newPassword: Joi.string().required(),
+    cfNewPassword: Joi.string().required(),
+    userId: Joi.string().custom(customValidations.objectId).required(),
+  })
 }
 
-const forgetPassword = {
-  email: Joi.string().email().required(),
-  code: Joi.string().required(),
+const forgotPassword = {
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    code: Joi.string().required(),
+  })
 }
 
 const loginPortal = {
-  userId: Joi.string().custom(customValidations.objectId).required(),
-  targetId: Joi.string().custom(customValidations.objectId).required(),
+  body: Joi.object().keys({
+    userId: Joi.string().custom(customValidations.objectId).required(),
+    targetId: Joi.string().custom(customValidations.objectId).required(),
+  })
 }
 
 const sendMail = {
-  email: Joi.string().email().required(),
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+  })
+}
+
+const addMember = {
+  body: {
+    userId: Joi.string().custom(customValidations.objectId).required(),
+    targetId: Joi.string().custom(customValidations.objectId).required(),
+  }
+}
+
+const removeMember = {
+  body: {
+    userId: Joi.string().custom(customValidations.objectId).required(),
+    targetId: Joi.string().custom(customValidations.objectId).required(),
+  }
 }
 
 export const authValidation = {
   register,
   login,
   changePassword,
-  forgetPassword,
+  forgotPassword,
   loginPortal,
   sendMail,
+  addMember,
+  removeMember,
 };

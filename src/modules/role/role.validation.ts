@@ -66,6 +66,14 @@ const getAll = {
   }),
 };
 
+const addUser = {
+
+}
+
+const removeUser = {
+
+}
+
 export const roleValidation = {
   createOne,
   updateOne,
@@ -73,4 +81,6 @@ export const roleValidation = {
   getOne,
   getAll,
   getList,
+  addUser,
+  removeUser,
 };

@@ -49,6 +49,7 @@ const getOne = {
   }),
   query: Joi.object().keys({
     hasLocation: Joi.boolean(),
+    hasRole: Joi.boolean(),
   }),
 };
 

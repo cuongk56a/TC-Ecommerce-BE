@@ -60,7 +60,7 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const filter = pick(req.query, ['search', 'phone', 'email']);
-    const options = pick(req.query, ['hasAddress', 'hasOrganization']);
+    const options = pick(req.query, ['hasAddress', 'hasOrganization', 'hasRole']);
     const queryOptions = pick(req.query, ['sort', 'limit', 'page']);
     try {
         const data = await userService.getList(filter, {...queryOptions, options});
@@ -72,7 +72,7 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const filter = pick(req.query, ['search', 'phone', 'email']);
-    const options = pick(req.query, ['hasAddress', 'hasOrganization']);
+    const options = pick(req.query, ['hasAddress', 'hasOrganization', 'hasRole']);
     try {
         const data = await userService.getAll(filter, options);
         res.send(data);

@@ -8,6 +8,8 @@ import {
 import {validate} from '../../middlewares/validate';
 import {roleController} from './role.controller';
 import {roleValidation} from './role.validation';
+import { checkPermission } from '../../middlewares/checkPermission';
+import { PERMISSION_TYPE } from './role.type';
 
 const router = express.Router()
 
@@ -22,7 +24,12 @@ router
     .route('/:roleId')
     .get(validate(roleValidation.getOne), roleController.getOne)
     .patch(auth(), addUpdatedByIdToBody, validate(roleValidation.updateOne), roleController.updateOne)
-    .delete(auth(), addDeletedByToBody, validate(roleValidation.deleteOne), roleController.deleteOne)
+    .delete(auth(), addDeletedByToBody, validate(roleValidation.deleteOne), roleController.deleteOne);
+
+router
+    .route('/:roleId/user')
+    .post(auth(), checkPermission(PERMISSION_TYPE.USER_UPDATE), addUpdatedByIdToBody, validate(roleValidation.addUser),roleController.addUser)
+    .patch(auth(),checkPermission(PERMISSION_TYPE.USER_UPDATE), addUpdatedByIdToBody, validate(roleValidation.removeUser),roleController.removeUser);
 
 export const roleRoute = router;
 

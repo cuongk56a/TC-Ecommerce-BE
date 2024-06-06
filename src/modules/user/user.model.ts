@@ -5,6 +5,7 @@ import { TABLE_USER } from './user.configs';
 import { paginate, toJSON } from '../../utils/plugins';
 import { TABLE_ADDRESS } from '../address/address.configs';
 import { getImageUriFromFilename } from '../../utils/core/stringUtil';
+import { TABLE_ROLE } from '../role/role.configs';
 
 export async function generateUniqueCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -126,7 +127,16 @@ userSchema.virtual('address', {
   match: {deletedById: {$exists: false}},
 });
 
-const populateArr = ({hasAddress}: {hasAddress: boolean}) => {
+userSchema.virtual('role', {
+  ref: TABLE_ROLE,
+  localField: 'userIds', 
+  foreignField: '_id',
+  justOne: true,
+  match: {deletedById: {$exists: false}},
+});
+
+
+const populateArr = ({hasAddress, hasRole}: {hasAddress: boolean, hasRole: boolean}) => {
   let pA: any[] = [];
   return pA
     .concat(
@@ -134,6 +144,13 @@ const populateArr = ({hasAddress}: {hasAddress: boolean}) => {
         ? {
             path: 'address',
             options: {hasLocation: true}
+          }
+        : [],
+    )
+    .concat(
+      !!hasRole
+        ? {
+            path: 'role',
           }
         : [],
     );
