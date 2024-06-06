@@ -108,7 +108,7 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
   try {
     const [confirmCode, newPassword] = await Promise.all([getRedisCode(email), genCode(4)]);
     if (confirmCode !== code) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Code Not Success!');
+      res.status(httpStatus.BAD_REQUEST).send({code: httpStatus.BAD_REQUEST, status: 'Error', message: 'Mã xác thực không đúng!'});
     } else {
       const hashedPassword = await hashPassword('newPassword');
       await userService.updateOne(
@@ -142,7 +142,7 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
           console.log('Send Email Success! ' + info.response);
         }
       });
-      res.send({status: 'Success!', message: 'Mật khẩu mới đã được gửi tới email của bạn!'});
+      res.send({code: httpStatus.OK, status: 'Success!', message: 'Mật khẩu mới đã được gửi tới email của bạn!'});
     }
   } catch (error: any) {
     return next(new ApiError(httpStatus.NOT_FOUND, error.message));
