@@ -1,5 +1,6 @@
 import {URL} from 'url';
 import { getRedisImage } from '../../redis/redisImage';
+import { appConfigs } from '../../config/config';
 
 export function removeVietnameseTones(str: string) {
   str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
@@ -54,9 +55,10 @@ export function isUrlValid(str: string) {
   }
 }
 
-export async function getImageUriFromFilename(filename: string) {
-  if (!filename) return filename;
-  if (isUrlValid(filename)) return filename;
-  const redisPath = await getRedisImage(filename);
-  return redisPath;
+export function getImageUriFromFilename(filename: string) {
+  return !!filename
+    ? isUrlValid(filename)
+      ? filename
+      : `${appConfigs.services.svFile}/v1/image/${filename}`
+    : filename;
 }

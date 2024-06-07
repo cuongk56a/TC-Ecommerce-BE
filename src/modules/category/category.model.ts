@@ -60,8 +60,8 @@ const categorySchema = new mongoose.Schema<ICategoryModelDoc>(
   },
 );
 
-categorySchema.virtual('thumbnailUri').get(async function () {
-  return await getImageUriFromFilename(this.thumbnail || '');
+categorySchema.virtual('thumbnailUri').get(function () {
+  return getImageUriFromFilename(this.thumbnail || '');
 });
 
 categorySchema.virtual('child', {
@@ -91,10 +91,6 @@ function preFind(next: any) {
 
 categorySchema.pre('findOne', preFind);
 categorySchema.pre('find', preFind);
-
-categorySchema.virtual('thumbnailUri').get(function () {
-  return getImageUriFromFilename(this.thumbnail || '');
-});
 
 categorySchema.plugin(toJSON);
 categorySchema.plugin(paginate);

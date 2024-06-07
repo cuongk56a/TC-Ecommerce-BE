@@ -23,11 +23,11 @@ const register = catchAsync(async (req: Request, res: Response, next: NextFuncti
       $or: [{email: email}, {phone: phone}],
     });
     if (!!user) {
-      res.status(httpStatus.BAD_REQUEST).send('User Already Exists!');
+      res.send({code: httpStatus.BAD_REQUEST, status:'Error', message:'User Already Exists!'});
     } else if (password !== confirmPassword) {
-      res.status(httpStatus.BAD_REQUEST).send('Pass And confirmPassword Not Same!');
+      res.send({code: httpStatus.BAD_REQUEST, status:'Error', message:'Pass And confirmPassword Not Same!'});
     } else if (confirmCode !== code) {
-      res.status(httpStatus.BAD_REQUEST).send('Code And ConfirmCode Not Same!');
+      res.send({code: httpStatus.BAD_REQUEST, status:'Error', message:'Code And ConfirmCode Not Same!'});
     } else {
       const [hashedPassword, CODE] = await Promise.all([hashPassword(password), genCODE(UserModel)]);
       const data: IUserDoc | null = await userService.createOne({
@@ -53,9 +53,9 @@ const login = catchAsync(async (req: Request, res: Response, next: NextFunction)
   try {
     const user: IUserDoc | null = await userService.getOne({email});
     if (!user) {
-      res.status(httpStatus.NOT_FOUND).send('Not Found User!');
+      res.send({code: httpStatus.NOT_FOUND, status: 'Error', message:'Not Found User!'});
     } else if (!checkPassword(password, user.hashedPassword)) {
-      res.status(httpStatus.BAD_REQUEST).send('Email Or Password Not Incorrect!');
+      res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message:'Email Or Password Not Incorrect!'});
     } else {
       const access_token = getNewToken({userId: user.id, roleId: '658a91aa1b7f912c44009108'});
       res.send({access_token, user});
@@ -108,7 +108,7 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
   try {
     const [confirmCode, newPassword] = await Promise.all([getRedisCode(email), genCode(4)]);
     if (confirmCode !== code) {
-      res.status(httpStatus.OK).send({code: httpStatus.BAD_REQUEST, status: 'Error', message: 'Mã xác thực không đúng!'});
+      res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message: 'Mã xác thực không đúng!'});
     } else {
       const hashedPassword = await hashPassword('newPassword');
       await userService.updateOne(

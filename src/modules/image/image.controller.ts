@@ -11,22 +11,21 @@ const createOrUpdateMany = catchAsync(async (req: Request, res: Response, next: 
         return res.status(400).json({ message: 'No files uploaded' });
     }
     try {
-        console.log(req.files);
-        // const images = await Promise.all(
-        //     (req.files as MulterFile[]).map(async (image) => {
-        //         return await imageService.createOne({
-        //             originalName: image.originalname,
-        //             fileName: image.filename.split('/')[1],
-        //             path: image.path,
-        //             size: image.size,
-        //             mimetype: image.mimetype,
-        //             fileExtension: image.mimetype.split('/')[1],
-        //             fileType: image.mimetype.split('/')[0],
-        //         });
-        //     })
-        // );
+        const images = await Promise.all(
+            (req.files as MulterFile[]).map(async (image) => {
+                return await imageService.createOne({
+                    originalName: image.originalname,
+                    fileName: image.filename.split('/')[1],
+                    path: image.path,
+                    size: image.size,
+                    mimetype: image.mimetype,
+                    fileExtension: image.mimetype.split('/')[1],
+                    fileType: image.mimetype.split('/')[0],
+                });
+            })
+        );
 
-        // res.status(201).json(images);
+        res.status(httpStatus.OK).json(images);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
     }
@@ -36,7 +35,7 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
     const {fileName} = pick(req.params, ['fileName']);
     try {
         const data = await imageService.getOne({originalName: fileName});
-        res.send(data);
+        res.redirect(data?.path||fileName);
     } catch (error: any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
     }

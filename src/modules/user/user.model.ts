@@ -104,8 +104,8 @@ const userSchema = new mongoose.Schema<IUserModelDoc>(
   },
 );
 
-userSchema.virtual('avatarUri').get(async function () {
-  return await getImageUriFromFilename(this.avatar || '');
+userSchema.virtual('avatarUri').get(function () {
+  return getImageUriFromFilename(this.avatar || '');
 });
 
 userSchema.plugin(toJSON);

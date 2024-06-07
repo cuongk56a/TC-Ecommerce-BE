@@ -57,8 +57,8 @@ const blogSchema = new mongoose.Schema<IBlogModelDoc>(
   },
 );
 
-blogSchema.virtual('thumbnailUri').get(async function () {
-  return await getImageUriFromFilename(this.thumbnail || '');
+blogSchema.virtual('thumbnailUri').get(function () {
+  return getImageUriFromFilename(this.thumbnail || '');
 });
 
 blogSchema.plugin(toJSON);

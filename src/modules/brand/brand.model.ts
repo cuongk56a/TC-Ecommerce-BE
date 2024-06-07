@@ -54,8 +54,8 @@ const brandSchema = new mongoose.Schema<IBrandModelDoc>(
   },
 );
 
-brandSchema.virtual('logoUri').get(async function () {
-  return await getImageUriFromFilename(this.logo || '');
+brandSchema.virtual('logoUri').get(function () {
+  return getImageUriFromFilename(this.logo || '');
 });
 
 brandSchema.plugin(toJSON);

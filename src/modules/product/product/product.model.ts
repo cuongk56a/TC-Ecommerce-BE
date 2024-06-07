@@ -99,8 +99,8 @@ productSchema.index({categoryId: 1});
 productSchema.index({brandId: 1});
 productSchema.index({name: 'text'});
 
-productSchema.virtual('thumbnailUri').get( async function () {
-  return await getImageUriFromFilename(this.thumbnail || '');
+productSchema.virtual('thumbnailUri').get(function () {
+  return getImageUriFromFilename(this.thumbnail || '');
 });
 
 productSchema.virtual('unit', {

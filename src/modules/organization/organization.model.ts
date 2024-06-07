@@ -61,8 +61,8 @@ const organizationSchema = new mongoose.Schema<IOrganizationModelDoc>(
   },
 );
 
-organizationSchema.virtual('thumbnailUri').get(async function () {
-  return await getImageUriFromFilename(this.thumbnail || '');
+organizationSchema.virtual('thumbnailUri').get(function () {
+  return getImageUriFromFilename(this.thumbnail || '');
 });
 
 organizationSchema.plugin(toJSON);
