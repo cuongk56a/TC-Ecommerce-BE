@@ -53,7 +53,7 @@ const deleteOne = catchAsync(async (req: Request, res: Response, next: NextFunct
 
 const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const {userId} = req.params;
-  const options = pick(req.query, ['hasOrganization']);
+  const options = pick(req.query, ['hasAddress', 'hasRole','hasOrganization']);
   try {
     const data = await userService.getOne({_id: userId}, options);
     if (!data) {
