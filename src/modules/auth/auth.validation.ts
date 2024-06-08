@@ -24,6 +24,8 @@ const changePassword = {
     password: Joi.string().required(),
     newPassword: Joi.string().required(),
     cfNewPassword: Joi.string().required(),
+  }),
+  params: Joi.object().keys({
     userId: Joi.string().custom(customValidations.objectId).required(),
   })
 }

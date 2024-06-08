@@ -66,7 +66,8 @@ const login = catchAsync(async (req: Request, res: Response, next: NextFunction)
 });
 
 const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const {password, newPassword, cfNewPassword, userId, ...body} = req.body;
+  const {password, newPassword, cfNewPassword, ...body} = req.body;
+  const {userId} = req.params;
   try {
     if (newPassword !== cfNewPassword) {
       res.status(httpStatus.BAD_REQUEST).send('NewPassword And cfNewPassword Not Same!');
@@ -77,10 +78,10 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
       hashPassword(newPassword),
     ]);
     if (!user) {
-      res.status(httpStatus.NOT_FOUND).send('Not Found User!');
+      res.send({code: httpStatus.NOT_FOUND, status: 'Error', message:'Người dùng không tồn tại!'});
     } else {
       if (user.hashedPassword !== checkPassword) {
-        res.status(httpStatus.BAD_REQUEST).send('Password Not Incorrect!');
+        res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message:'Mật khẩu cũ không chính xác!'});
       } else {
         await userService.updateOne(
           {
@@ -95,7 +96,7 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
           },
         );
         const access_token = getNewToken({userId: userId});
-        res.send(access_token);
+        res.send({code: httpStatus.OK, status: 'Success', message:'Đổi mật khẩu thành công!'});
       }
     }
   } catch (error: any) {
