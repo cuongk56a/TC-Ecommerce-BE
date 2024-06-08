@@ -66,14 +66,13 @@ const login = catchAsync(async (req: Request, res: Response, next: NextFunction)
 });
 
 const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const {password, newPassword, cfNewPassword, ...body} = req.body;
-  const {userId} = req.params;
+  const {password, newPassword, cfNewPassword, updatedById, ...body} = req.body;
   try {
     if (newPassword !== cfNewPassword) {
       res.status(httpStatus.BAD_REQUEST).send('NewPassword And cfNewPassword Not Same!');
     }
     const [user, checkPassword, hashedPassword] = await Promise.all([
-      userService.getOne({_id: userId}),
+      userService.getOne({_id: updatedById}),
       hashPassword(password),
       hashPassword(newPassword),
     ]);
@@ -85,17 +84,17 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
       } else {
         await userService.updateOne(
           {
-            _id: userId,
+            _id: updatedById,
           },
           {
             hashedPassword,
+            updatedById,
             ...body,
           },
           {
             new: true,
           },
         );
-        const access_token = getNewToken({userId: userId});
         res.send({code: httpStatus.OK, status: 'Success', message:'Đổi mật khẩu thành công!'});
       }
     }
