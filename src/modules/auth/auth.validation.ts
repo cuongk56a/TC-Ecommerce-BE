@@ -24,6 +24,7 @@ const changePassword = {
     password: Joi.string().required(),
     newPassword: Joi.string().required(),
     cfNewPassword: Joi.string().required(),
+    roleCheckId: Joi.string(),
     ...customValidations.updateEntityValidation
   }),
 }

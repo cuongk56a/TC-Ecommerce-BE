@@ -69,17 +69,19 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
   const {password, newPassword, cfNewPassword, updatedById, ...body} = req.body;
   try {
     if (newPassword !== cfNewPassword) {
-      res.status(httpStatus.BAD_REQUEST).send('NewPassword And cfNewPassword Not Same!');
+      res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message:'Mật khẩu mới và mật khẩu xác nhận không khớp!'});
     }
-    const [user, checkPassword, hashedPassword] = await Promise.all([
+    const [user, hashedPassword] = await Promise.all([
       userService.getOne({_id: updatedById}),
-      hashPassword(password),
       hashPassword(newPassword),
     ]);
     if (!user) {
       res.send({code: httpStatus.NOT_FOUND, status: 'Error', message:'Người dùng không tồn tại!'});
-    } else {
-      if (user.hashedPassword !== checkPassword) {
+      } else {
+        
+        const check = await checkPassword(newPassword, user?.hashedPassword);
+        
+      if (!check) {
         res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message:'Mật khẩu cũ không chính xác!'});
       } else {
         await userService.updateOne(
@@ -110,7 +112,7 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
     if (confirmCode !== code) {
       res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message: 'Mã xác thực không đúng!'});
     } else {
-      const hashedPassword = await hashPassword('newPassword');
+      const hashedPassword = await hashPassword(newPassword);
       await userService.updateOne(
         {
           email,
