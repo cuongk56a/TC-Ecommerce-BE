@@ -48,7 +48,7 @@ const getOne = {
     userId: Joi.string().custom(customValidations.objectId).required(),
   }),
   query: Joi.object().keys({
-    hasLocation: Joi.boolean(),
+    hasAddress: Joi.boolean(),
     hasOrganization: Joi.boolean(),
     hasRole: Joi.boolean(),
   }),
@@ -59,7 +59,7 @@ const getList = {
     organizationId: Joi.string().custom(customValidations.objectId),
     phone: Joi.string().empty(''),
     email: Joi.string().empty(''),
-    hasLocation: Joi.boolean(),
+    hasAddress: Joi.boolean(),
     hasOrganization: Joi.boolean(),
     hasRole: Joi.boolean(),
     search: Joi.string().empty(''),
