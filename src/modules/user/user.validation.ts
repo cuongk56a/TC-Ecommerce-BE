@@ -73,7 +73,7 @@ const getAll = {
     organizationIds: Joi.string().custom(customValidations.objectId),
     phone: Joi.string().empty(''),
     email: Joi.string().empty(''),
-    hasLocation: Joi.boolean(),
+    hasAddress: Joi.boolean(),
     hasOrganization: Joi.boolean(),
     hasRole: Joi.boolean(),
     search: Joi.string().empty(''),
