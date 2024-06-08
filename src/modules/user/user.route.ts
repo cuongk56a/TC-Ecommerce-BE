@@ -24,7 +24,7 @@ router
     .route('/:userId')
     .get(validate(userValidation.getOne), userController.getOne)
     .patch(auth(), addUpdatedByIdToBody, validate(userValidation.updateOne), userController.updateOne)
-    .delete(auth(), addDeletedByToBody, validate(userValidation.deleteOne), userController.deleteOne)
+    .delete(auth(), addDeletedByToBody, validate(userValidation.deleteOne), userController.deleteOne);
 
 export const userRoute = router;
 

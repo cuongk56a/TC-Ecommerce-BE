@@ -49,6 +49,7 @@ const getOne = {
   }),
   query: Joi.object().keys({
     hasLocation: Joi.boolean(),
+    hasOrganization: Joi.boolean(),
     hasRole: Joi.boolean(),
   }),
 };
@@ -60,6 +61,7 @@ const getList = {
     email: Joi.string().empty(''),
     hasLocation: Joi.boolean(),
     hasOrganization: Joi.boolean(),
+    hasRole: Joi.boolean(),
     search: Joi.string().empty(''),
     ...customValidations.paginateValidation,
   }),
@@ -68,11 +70,12 @@ const getList = {
 
 const getAll = {
   query: Joi.object().keys({
-    organizationId: Joi.string().custom(customValidations.objectId),
+    organizationIds: Joi.string().custom(customValidations.objectId),
     phone: Joi.string().empty(''),
     email: Joi.string().empty(''),
     hasLocation: Joi.boolean(),
     hasOrganization: Joi.boolean(),
+    hasRole: Joi.boolean(),
     search: Joi.string().empty(''),
   }),
 };

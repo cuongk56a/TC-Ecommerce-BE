@@ -112,7 +112,7 @@ const addUser = catchAsync(async (req: Request, res: Response, next: NextFunctio
 
 const removeUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const {roleId} = req.params;
-    const {userId, targetId} = req.body;
+    const {userId} = req.body;
     try {
       const role = await roleService.updateOne(
         {

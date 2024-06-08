@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import {IDoc} from '../../utils/types/entityTypes';
+import { TABLE_ORDER } from '../order/order.configs';
+import { TABLE_USER } from '../user/user.configs';
+import { TABLE_ROLE } from '../role/role.configs';
 
 export enum NOTIFICATION_FOR {
   ALL = 'ALL',
@@ -8,7 +11,8 @@ export enum NOTIFICATION_FOR {
 
 export enum NOTIFICATION_TYPE {
   'FROM_ADMIN' = 'FROM_ADMIN',
-  'MEMBERSHIP' = 'MEMBERSHIP',
+  'USER' = 'USER',
+  'ROLE' = 'ROLE',
   'ORDER' = 'ORDER',
   'COMMENT' = 'COMMENT',
   'BLOG' = 'BLOG',
@@ -16,12 +20,9 @@ export enum NOTIFICATION_TYPE {
 }
 
 export const entityModelObj: any = {
-  // [NotiTypes.ORDER]: TABLE_ORDER,
-  // [NotiTypes.VOUCHER]: TABLE_VOUCHER,
-  // [NotiTypes.REVIEW]: TABLE_COMMENT,
-  // [NotiTypes.MEMBERSHIP]: TABLE_MEMBERSHIP,
-  // [NotiTypes.TICKET]: TABLE_TICKET,
-  // [NotiTypes.BOOK_CAR]: TABLE_BOOK_CAR,
+  [NOTIFICATION_TYPE.ORDER]: TABLE_ORDER,
+  [NOTIFICATION_TYPE.USER]: TABLE_USER,
+  [NOTIFICATION_TYPE.ROLE]: TABLE_ROLE,
 };
 
 export interface INotificationDoc extends IDoc {

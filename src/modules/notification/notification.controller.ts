@@ -70,9 +70,10 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const filter = pick(req.query, ['createdById', 'isTeacher','isAdmin','search','notificationId']);
+    const options = pick(req.query, ['hasEntity', 'hasCanSeen', 'hasUserSeen']);
     const queryOptions = pick(req.query, ['sort', 'limit', 'page']);
     try {
-        const data = await notificationService.getList(filter, {...queryOptions});
+        const data = await notificationService.getList(filter, {...queryOptions, ...options});
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));
@@ -81,8 +82,9 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const filter = pick(req.query, ['createdById', 'isAdmin', 'isTeacher','search','notificationId']);
+    const options = pick(req.query, ['hasEntity', 'hasCanSeen', 'hasUserSeen']);
     try {
-        const data = await notificationService.getAll(filter);
+        const data = await notificationService.getAll(filter, options);
         res.send(data);
     } catch (error:any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));

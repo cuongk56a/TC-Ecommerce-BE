@@ -6,6 +6,7 @@ import { paginate, toJSON } from '../../utils/plugins';
 import { TABLE_ADDRESS } from '../address/address.configs';
 import { getImageUriFromFilename } from '../../utils/core/stringUtil';
 import { TABLE_ROLE } from '../role/role.configs';
+import { TABLE_ORGANIZATION } from '../organization/organization.configs';
 
 export async function generateUniqueCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -115,7 +116,6 @@ userSchema.pre('save', async function (next) {
   if (!this.CODE) {
     this.CODE = await generateUniqueCode();
   }
-  console.log(1);
   next();
 });
 
@@ -135,8 +135,15 @@ userSchema.virtual('role', {
   match: {deletedById: {$exists: false}},
 });
 
+userSchema.virtual('organizations', {
+  ref: TABLE_ORGANIZATION,
+  localField: 'organizationIds', 
+  foreignField: '_id',
+  justOne: false,
+  match: {deletedById: {$exists: false}},
+});
 
-const populateArr = ({hasAddress, hasRole}: {hasAddress: boolean, hasRole: boolean}) => {
+const populateArr = ({hasAddress, hasRole, hasOrganization, organizationIds}: {hasAddress: boolean, hasRole: boolean, hasOrganization: boolean, organizationIds: string}) => {
   let pA: any[] = [];
   return pA
     .concat(
@@ -148,16 +155,24 @@ const populateArr = ({hasAddress, hasRole}: {hasAddress: boolean, hasRole: boole
         : [],
     )
     .concat(
-      !!hasRole
+      !!hasRole && !!organizationIds
         ? {
             path: 'role',
+            match: {targetId: organizationIds}
+          }
+        : [],
+    )
+    .concat(
+      !!hasOrganization
+        ? {
+            path: 'organizations',
           }
         : [],
     );
 };
 
 function preFind(next: any) {
-  this.populate(populateArr(this.getOptions()));
+  this.populate(populateArr({...this.getOptions(), ...this._conditions}));
   next();
 }
 

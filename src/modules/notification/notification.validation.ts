@@ -59,6 +59,9 @@ const getList = {
     entityId: Joi.string().custom(customValidations.objectId),
     notiFor: Joi.string().valid(...Object.values(NOTIFICATION_FOR)),
     users: Joi.array().items(Joi.string().custom(customValidations.objectId)),
+    hasEntity: Joi.boolean(),
+    hasCanSeen: Joi.boolean(),
+    hasUserSeen: Joi.boolean(),
     ...customValidations.paginateValidation,
   }),
 };
@@ -72,6 +75,9 @@ const getAll = {
     entityId: Joi.string().custom(customValidations.objectId),
     notiFor: Joi.string().valid(...Object.values(NOTIFICATION_FOR)),
     users: Joi.array().items(Joi.string().custom(customValidations.objectId)),
+    hasEntity: Joi.boolean(),
+    hasCanSeen: Joi.boolean(),
+    hasUserSeen: Joi.boolean(),
   }),
 };
 

@@ -67,11 +67,22 @@ const getAll = {
 };
 
 const addUser = {
-
+  params: Joi.object().keys({
+    userId: Joi.string().custom(customValidations.objectId).required(),
+  }),
+  body: Joi.object().keys({
+    userId: Joi.string().custom(customValidations.objectId).required(),
+    targetId: Joi.string().custom(customValidations.objectId).required(),
+  }),
 }
 
 const removeUser = {
-
+  params: Joi.object().keys({
+    userId: Joi.string().custom(customValidations.objectId).required(),
+  }),
+  body: Joi.object().keys({
+    userId: Joi.string().custom(customValidations.objectId).required(),
+  }),
 }
 
 export const roleValidation = {

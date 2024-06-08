@@ -57,7 +57,7 @@ const login = catchAsync(async (req: Request, res: Response, next: NextFunction)
     } else if (!checkPassword(password, user.hashedPassword)) {
       res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message:'Email Or Password Not Incorrect!'});
     } else {
-      const access_token = getNewToken({userId: user.id, roleId: '658a91aa1b7f912c44009108'});
+      const access_token = getNewToken({userId: user.id});
       res.send({access_token, user});
     }
   } catch (error: any) {

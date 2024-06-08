@@ -101,13 +101,27 @@ notificationSchema.virtual('userSeen', {
   match: {deletedById: {$exists: false}},
 });
 
-const populateArr = ({hasEntity}: {hasEntity: boolean;}) => {
+const populateArr = ({hasEntity, hasCanSeen, hasUserSeen}: {hasEntity: boolean, hasCanSeen: boolean, hasUserSeen: boolean}) => {
   let pA: any[] = [];
   return pA
     .concat(
       !!hasEntity
         ? {
             path: 'entity',
+          }
+        : [],
+    )
+    .concat(
+      !!hasCanSeen
+        ? {
+            path: 'userCanSeen',
+          }
+        : [],
+    )
+    .concat(
+      !!hasUserSeen
+        ? {
+            path: 'userSeen',
           }
         : [],
     );

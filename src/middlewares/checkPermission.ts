@@ -5,12 +5,11 @@ import { UserModel } from '../modules/user/user.model';
 
 export const checkPermission = (permission:string) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const { roleCheckId} = req.body;
-        const { userId } = req.userId
+        const { roleCheckId } = req.body;
         try {
             const [role, user] = await Promise.all([
                 roleService.getOne({_id: roleCheckId}),
-                UserModel.findOne({_id: userId})
+                UserModel.findOne({_id: req.userId})
             ]) 
             if ((!!role && role.permissions.includes(permission)) || user?.isAdmin === true) {
                 next();
