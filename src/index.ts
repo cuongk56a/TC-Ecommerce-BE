@@ -11,6 +11,7 @@ declare global {
   namespace Express {
     interface Request {
       userId: any;
+      roleCheckId: any;
       // isAdmin: boolean;
     }
   }

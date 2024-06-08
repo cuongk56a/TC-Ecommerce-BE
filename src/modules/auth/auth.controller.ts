@@ -79,9 +79,9 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
       res.send({code: httpStatus.NOT_FOUND, status: 'Error', message:'Người dùng không tồn tại!'});
       } else {
         
-        const check = await checkPassword(newPassword, user?.hashedPassword);
+      const check = await checkPassword(password, user?.hashedPassword);
         
-      if (!check) {
+      if (check == false) {
         res.send({code: httpStatus.BAD_REQUEST, status: 'Error', message:'Mật khẩu cũ không chính xác!'});
       } else {
         await userService.updateOne(
