@@ -32,7 +32,7 @@ const getList = {
 
 const getAll = {
   query: Joi.object().keys({
-    parentId: Joi.string().custom(customValidations.objectId),
+    parentId: Joi.string().custom(customValidations.objectId).empty(''),
     locationType: Joi.string().valid(...Object.values(LOCATION_TYPE)),
   }),
 };
