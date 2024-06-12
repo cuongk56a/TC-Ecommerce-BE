@@ -66,7 +66,7 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
     const options = pick(req.query, ['hasUnit','hasCategory','hasBrand']);
     const sortOptions = pick(req.query, ['sort'])
     try {
-        const data = await productService.getList(filter, { ...queryOptions, ...options }, sortOptions);
+        const data = await productService.getList(filter, { ...queryOptions, options }, sortOptions);
         res.send(data);
     } catch (error: any) {
         return next(new ApiError(httpStatus.NOT_FOUND, error.message));

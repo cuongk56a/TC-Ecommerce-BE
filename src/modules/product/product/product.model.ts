@@ -56,10 +56,12 @@ const productSchema = new mongoose.Schema<IProductModelDoc>(
       type: Number
     },
     quantity: {
-      type: Number
+      type: Number,
+      default: 0,
     },
     weight: {
-      type: Number
+      type: Number,
+      default: 0,
     },
     unitId: {
       type: mongoose.Schema.Types.ObjectId,

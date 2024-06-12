@@ -51,6 +51,9 @@ export const appConfigs = {
   // redis: `redis://:${!!envVars.REDIS_PASSWORD ? envVars.REDIS_PASSWORD + '@' : ''}@${envVars.REDIS_HOST}:${
   //   envVars.REDIS_PORT
   // }`,
+  redisHost: envVars.REDIS_HOST,
+  redisPort: envVars.REDIS_PORT,
+  redisPassword: envVars.REDIS_PASSWORD,
   redis: envVars.REDIS_URI,
   token_secret: envVars.JWT_TOKEN_SECRET,
   mongoose: {

@@ -3,7 +3,7 @@ import {IDoc} from '../../utils/types/entityTypes';
 
 export enum STATUS_ORDER_TYPE {
   PENDING = 'PENDING',
-  ACCETED = 'ACCETED',
+  ACCEPTED = 'ACCEPTED',
   INPROGESS = 'INPROGESS',
   READY_TO_DELIVERY = 'READY_TO_DELIVERY',
   COMPLETED = 'COMPLETED',
@@ -12,13 +12,13 @@ export enum STATUS_ORDER_TYPE {
   CANCELLED = 'CANCELLED',
   REJECT = 'REJECT',
   REFUND = 'REFUND',
-  ACCETED_REFUND = 'ACCETED_REFUND',
+  ACCEPTED_REFUND = 'ACCETED_REFUND',
   DRAFT = 'DRAFT',
 }
 
 export const OrderStatusObj = {
   PENDING: 'Đã đặt hàng',
-  ACCETED: 'Đã Nhận đơn',
+  ACCEPTED: 'Đã Nhận đơn',
   INPROGESS: 'Đang xử lý',
   READY_TO_DELIVERY: 'Chờ vận chuyển',
   COMPLETED: 'Hoàn thành',
@@ -27,7 +27,7 @@ export const OrderStatusObj = {
   CANCELLED: 'Đã hủy',
   REJECT: 'Đã từ chối',
   REFUND : 'Đơn hoàn',
-  ACCETED_REFUND: 'Hoàn thành công',
+  ACCEPTED_REFUND: 'Hoàn thành công',
   DRAFT: 'Đơn nháp',
 };
 

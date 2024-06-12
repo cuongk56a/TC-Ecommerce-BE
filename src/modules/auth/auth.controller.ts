@@ -2,7 +2,6 @@ import {NextFunction, Request, Response} from 'express';
 import httpStatus from 'http-status';
 import ApiError from '../../utils/core/ApiError';
 import {catchAsync} from '../../utils/core/catchAsync';
-import {pick} from '../../utils/core/pick';
 import {userService} from '../user/user.service';
 import nodemailer from 'nodemailer';
 import {getRedisCode, setRedisCode} from '../../redis/redisCode';

@@ -50,9 +50,9 @@ const getOne = {
 
 const getList = {
   query: Joi.object().keys({
-    targetId: Joi.string().custom(customValidations.objectId),
-    roleId: Joi.string().custom(customValidations.objectId),
+    targetId: Joi.string().custom(customValidations.objectId).required(),
     isActive: Joi.boolean(),
+    search: Joi.string().empty(''),
     ...customValidations.paginateValidation,
   }),
 };
@@ -60,9 +60,9 @@ const getList = {
 
 const getAll = {
   query: Joi.object().keys({
-    targetId: Joi.string().custom(customValidations.objectId),
-    roleId: Joi.string().custom(customValidations.objectId),
+    targetId: Joi.string().custom(customValidations.objectId).required(),
     isActive: Joi.boolean(),
+    search: Joi.string().empty(''),
   }),
 };
 

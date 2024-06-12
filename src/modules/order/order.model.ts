@@ -1,14 +1,33 @@
 import mongoose from 'mongoose';
-import { IOrderDoc, PAYMENT_METHOD_TYPE, STATUS_ORDER_TYPE } from './order.type';
-import { IDocModel } from '../../utils/types/entityTypes';
+import {IOrderDoc, PAYMENT_METHOD_TYPE, STATUS_ORDER_TYPE} from './order.type';
+import {IDocModel} from '../../utils/types/entityTypes';
 import {TABLE_ORDER} from './order.configs';
-import {paginate, toJSON} from '../../utils/plugins'
-import { TABLE_USER } from '../user/user.configs';
-import { TABLE_ORGANIZATION } from '../organization/organization.configs';
-import { TABLE_ADDRESS } from '../address/address.configs';
-import { TABLE_PRODUCT } from '../product/product/product.configs';
+import {paginate, toJSON} from '../../utils/plugins';
+import {TABLE_USER} from '../user/user.configs';
+import {TABLE_ORGANIZATION} from '../organization/organization.configs';
+import {TABLE_ADDRESS} from '../address/address.configs';
+import {TABLE_PRODUCT} from '../product/product/product.configs';
+import {createNewQueue} from '../../redis/queue';
+import {OrderQueue} from './queue/OrderQueue';
 
-export interface IOrderModelDoc extends IOrderDoc {}
+export const genCODE = async function () {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let CODE = '';
+  while (true) {
+    for (let i = 0; i < 9; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      CODE += characters[randomIndex];
+    }
+
+    const existingDocument = await OrderModel.findOne({CODE});
+    if (!existingDocument) {
+      return CODE;
+    }
+    CODE = '';
+  }
+};
+
+export interface IOrderModelDoc extends IOrderDoc, mongoose.Document {}
 interface IOrderModel extends IDocModel<IOrderModelDoc> {}
 
 const orderSchema = new mongoose.Schema<IOrderModelDoc>(
@@ -21,7 +40,7 @@ const orderSchema = new mongoose.Schema<IOrderModelDoc>(
     targetOnModel: {
       type: String,
       enum: [TABLE_ORGANIZATION],
-      default: TABLE_ORGANIZATION
+      default: TABLE_ORGANIZATION,
     },
     CODE: {
       type: String,
@@ -31,26 +50,24 @@ const orderSchema = new mongoose.Schema<IOrderModelDoc>(
     cart: {
       type: [
         {
-          type: {
-            productId: {
-              type: mongoose.Schema.Types.ObjectId,
-              required: true,
-            },
-            qty: {
-              type: Number,
-              required: true
-            },
-            unitPrice: {
-              type: Number,
-              required: true
-            },
-            amount: {
-              type: Number,
-              required: true
-            }
-          }
-        }
-      ]
+          productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+          },
+          qty: {
+            type: Number,
+            required: true,
+          },
+          unitPrice: {
+            type: Number,
+            required: true,
+          },
+          amount: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
     },
     shippingAddressId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -73,10 +90,8 @@ const orderSchema = new mongoose.Schema<IOrderModelDoc>(
       required: true,
     },
     voucherIds: {
-      type: [
-        mongoose.Schema.Types.ObjectId,
-      ],
-      default: []
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
     },
     totalDiscount: {
       type: Number,
@@ -90,7 +105,7 @@ const orderSchema = new mongoose.Schema<IOrderModelDoc>(
     },
     paymentMethod: {
       type: String,
-      enum: PAYMENT_METHOD_TYPE
+      enum: PAYMENT_METHOD_TYPE,
     },
     totalPayment: {
       type: Number,
@@ -123,17 +138,26 @@ orderSchema.plugin(paginate);
 orderSchema.index({CODE: 1});
 orderSchema.index({targetId: 1});
 
+orderSchema.pre('save', async function (next) {
+  if (!this.CODE) {
+    this.CODE = await genCODE();
+  }
+
+  this.$locals.wasNew = this.isNew;
+  next();
+});
+
 orderSchema.virtual('shippingAddress', {
   ref: TABLE_ADDRESS,
-  localField: 'shippingAddressId', 
+  localField: 'shippingAddressId',
   foreignField: '_id',
   justOne: true,
   // match: {deletedById: {$exists: false}},
 });
 
-orderSchema.virtual('items', {
+orderSchema.virtual('cart.item', {
   ref: TABLE_PRODUCT,
-  localField: 'cart.productId', 
+  localField: 'cart.productId',
   foreignField: '_id',
   justOne: true,
   // match: {deletedById: {$exists: false}},
@@ -141,7 +165,7 @@ orderSchema.virtual('items', {
 
 orderSchema.virtual('createdBy', {
   ref: TABLE_USER,
-  localField: 'createdById', 
+  localField: 'createdById',
   foreignField: '_id',
   justOne: true,
   // match: {deletedById: {$exists: false}},
@@ -149,27 +173,35 @@ orderSchema.virtual('createdBy', {
 
 // orderSchema.virtual('vouchers', {
 //   ref: TABLE_VOUCHER,
-//   localField: 'voucherIds', 
+//   localField: 'voucherIds',
 //   foreignField: '_id',
 //   justOne: false,
 //   // match: {deletedById: {$exists: false}},
 // });
 
-const populateArr = ({hasShippingAddress, hasItems, hasCreatedBy}: {hasShippingAddress: boolean, hasItems: boolean, hasCreatedBy: boolean}) => {
+const populateArr = ({
+  hasShippingAddress,
+  hasItems,
+  hasCreatedBy,
+}: {
+  hasShippingAddress: boolean;
+  hasItems: boolean;
+  hasCreatedBy: boolean;
+}) => {
   let pA: any[] = [];
   return pA
     .concat(
       !!hasShippingAddress
         ? {
             path: 'shippingAddress',
-            options: {hasLocation: true}
+            options: {hasLocation: true},
           }
         : [],
     )
     .concat(
       !!hasItems
         ? {
-            path: 'items',
+            path: 'cart.item',
           }
         : [],
     )
@@ -189,6 +221,48 @@ function preFind(next: any) {
 
 orderSchema.pre('findOne', preFind);
 orderSchema.pre('find', preFind);
+
+function afterSave(doc: IOrderModelDoc, next: any) {
+  if (!!doc && doc.status != STATUS_ORDER_TYPE.DRAFT) {
+    doc
+      .populate([
+        {
+          path: 'shippingAddress',
+          options: {hasLocation: true},
+        },
+        {
+          path: 'cart.item',
+        },
+        {
+          path: 'createdBy',
+        },
+      ])
+      .then(() => {
+        const orderQueue = createNewQueue('OrderQueue');
+        orderQueue
+          .add({
+            order: doc,
+            isNew: !!doc.$locals.wasNew,
+          })
+          .catch(err => {
+            console.error('Model:Order:afterSave Err ', err);
+            next();
+          })
+          .then(() => {
+            next();
+          });
+      })
+      .catch((err: any) => {
+        // Handle any potential errors
+        console.error('Error populating document:', err);
+        next(err); // Pass the error to the next middleware or callback
+      });
+  }else {
+    next();
+  }
+}
+
+orderSchema.post('save', afterSave);
 
 /**
  * @typedef Order

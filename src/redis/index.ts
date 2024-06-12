@@ -28,7 +28,8 @@ export const clearRedisAsync = async (key: string, time: number) => {
 }
 
 export const onConnetCallback = (callback: () => void) => {
-    client.on('connect', () => {
+    client.on('connect', async () => {
+        await client.flushAll();
         callback();
     });
 }

@@ -7,6 +7,7 @@ const createOne = {
   body: Joi.object().keys({
     targetId: Joi.string().custom(customValidations.objectId).required(),
     targetOnModel: Joi.string().valid(TABLE_ORGANIZATION).default(TABLE_ORGANIZATION),
+    CODE: Joi.string(),
     cart: Joi.array().items(
       Joi.object().keys({
         productId: Joi.string().custom(customValidations.objectId).required(),

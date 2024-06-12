@@ -16,15 +16,15 @@ const router = express.Router()
 router
     .route('/')
     .post(auth(),addCreatedByIdToBody,validate(roleValidation.createOne),roleController.createOne)
-    .get(validate(roleValidation.getList),roleController.getList);
+    .get(auth(), checkPermission(PERMISSION_TYPE.ROLE_READ), validate(roleValidation.getList),roleController.getList);
 
-router.route('/all').get(auth(),validate(roleValidation.getAll),roleController.getAll);
+router.route('/all').get(auth(), checkPermission(PERMISSION_TYPE.ROLE_READ),validate(roleValidation.getAll),roleController.getAll);
 
 router
     .route('/:roleId')
     .get(validate(roleValidation.getOne), roleController.getOne)
-    .patch(auth(), addUpdatedByIdToBody, validate(roleValidation.updateOne), roleController.updateOne)
-    .delete(auth(), addDeletedByToBody, validate(roleValidation.deleteOne), roleController.deleteOne);
+    .patch(auth(), checkPermission(PERMISSION_TYPE.ROLE_UPDATE), addUpdatedByIdToBody, validate(roleValidation.updateOne), roleController.updateOne)
+    .delete(auth(), checkPermission(PERMISSION_TYPE.ROLE_DELETE), addDeletedByToBody, validate(roleValidation.deleteOne), roleController.deleteOne);
 
 router
     .route('/:roleId/user')

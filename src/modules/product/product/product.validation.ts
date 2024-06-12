@@ -43,7 +43,6 @@ const updateOne = {
     capitalPrice: Joi.number().empty(''),
     salePrice: Joi.number().empty(''),
     price: Joi.number(),
-    quantity: Joi.number(),
     weight: Joi.number(),
     unitId: Joi.string().custom(customValidations.objectId),
     isActive: Joi.boolean(),

@@ -8,21 +8,23 @@ import {
 import {validate} from '../../../middlewares/validate';
 import {productController} from './product.controller';
 import {productValidation} from './product.validation';
+import { checkPermission } from '../../../middlewares/checkPermission';
+import { PERMISSION_TYPE } from '../../role/role.type';
 
 const router = express.Router()
 
 router
     .route('/')
-    .post(auth(),addCreatedByIdToBody,validate(productValidation.createOne),productController.createOne)
+    .post(auth(), checkPermission(PERMISSION_TYPE.PRODUCT_CREATE), addCreatedByIdToBody,validate(productValidation.createOne),productController.createOne)
     .get(validate(productValidation.getList),productController.getList);
 
-router.route('/all').get(auth(),validate(productValidation.getAll),productController.getAll);
+router.route('/all').get(auth(), checkPermission(PERMISSION_TYPE.PRODUCT_READ), validate(productValidation.getAll),productController.getAll);
 
 router
     .route('/:productId')
     .get(validate(productValidation.getOne), productController.getOne)
-    .patch(auth(), addUpdatedByIdToBody, validate(productValidation.updateOne), productController.updateOne)
-    .delete(auth(), addDeletedByToBody, validate(productValidation.deleteOne), productController.deleteOne)
+    .patch(auth(), checkPermission(PERMISSION_TYPE.PRODUCT_UPDATE), addUpdatedByIdToBody, validate(productValidation.updateOne), productController.updateOne)
+    .delete(auth(), checkPermission(PERMISSION_TYPE.PRODUCT_DELETE), addDeletedByToBody, validate(productValidation.deleteOne), productController.deleteOne)
 
 export const productRoute = router;
 

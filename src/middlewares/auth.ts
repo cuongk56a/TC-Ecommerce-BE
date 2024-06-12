@@ -17,7 +17,7 @@ const verifyCallback =
     // req.send({user})
     req.userId = user.userId;
     // req.organizationId = user.organizationId;
-    req.roleCheckId = user?.roleId;
+    req.roleId = user.roleId;
     // if (user.role != USER_ROLES.system && requiredRights.length) {
     //   const userRights: any = roleRights.get(user.role);
     //   const hasRequiredRights = requiredRights.every(requiredRight => userRights.includes(requiredRight));

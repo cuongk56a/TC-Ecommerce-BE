@@ -12,6 +12,7 @@ import { unitRoute } from '../../modules/product/unit/unit.route';
 import { productRoute } from '../../modules/product/product/product.route';
 import { imageRoute } from '../../modules/image/image.route';
 import { addressRoute } from '../../modules/address/address.route';
+import { orderRoute } from '../../modules/order/order.route';
 
 const router = express.Router();
 
@@ -63,6 +64,10 @@ const defaultRoutes: any[] = [
     {
         path: '/address',
         route: addressRoute,
+    },
+    {
+        path: '/order',
+        route: orderRoute,
     },
 ];
 
