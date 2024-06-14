@@ -7,6 +7,8 @@ import { onConnetCallback } from './redis';
 import http from 'http';
 import { Server } from 'socket.io';
 import { OrderQueue } from './modules/order/queue/OrderQueue';
+import cron from 'node-cron';
+import { orderService } from './modules/order/order.service';
 
 declare global {
   let __basedir: string;
@@ -36,8 +38,16 @@ onConnetCallback(() => {
       server.listen(appConfigs.port, async () => {
         logger.info(`Listening to port ${appConfigs.port}`);
 
-        io.on('connection', (socket) => {
-          console.log('Client connected:', socket.id);
+        cron.schedule('0 0 * * *', async () => {
+          try {
+            await orderService.cronJobOrder()
+            console.log('Product quantities updated successfully!');
+          } catch (error) {
+            console.error('Error updating product quantities:', error);
+          }
+        }, {
+          scheduled: true,
+          timezone: 'Asia/Ho_Chi_Minh'
         });
 
         const onOrderQUE = new OrderQueue('OrderQueue');

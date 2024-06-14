@@ -3,11 +3,11 @@ import httpStatus from 'http-status';
 import ApiError from '../../utils/core/ApiError';
 import {catchAsync} from '../../utils/core/catchAsync';
 import {pick} from '../../utils/core/pick';
-import {userService} from './user.service';
+import {rateService} from './rate.service';
 
 const createOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await userService.createOne(req.body);
+    const data = await rateService.createOne(req.body);
     if (!data) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
     }
@@ -18,22 +18,22 @@ const createOne = catchAsync(async (req: Request, res: Response, next: NextFunct
 });
 
 const updateOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const {userId} = req.params;
+  const {rateId} = req.params;
   try {
-      const data = await userService.updateOne({_id: userId}, req.body);
-      if (!data) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
-      }
-      res.send(data);
+    const data = await rateService.updateOne({_id: rateId}, req.body);
+    if (!data) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
+    }
+    res.send(data);
   } catch (error: any) {
     return next(new ApiError(httpStatus.NOT_FOUND, error.message));
   }
 });
 
 const deleteOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const {userId} = req.params;
+  const {rateId} = req.params;
   try {
-    const data = await userService.deleteOne({_id: userId});
+    const data = await rateService.updateOne({_id: rateId}, req.body);
     if (!data) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
     }
@@ -44,10 +44,10 @@ const deleteOne = catchAsync(async (req: Request, res: Response, next: NextFunct
 });
 
 const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const {userId} = req.params;
-  const options = pick(req.query, ['hasAddress', 'hasRole','hasOrganization']);
+  const {rateId} = req.params;
+  const options = pick(req.query, ['hasProduct']);
   try {
-    const data = await userService.getOne({_id: userId}, options);
+    const data = await rateService.getOne({_id: rateId}, options);
     if (!data) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
     }
@@ -58,11 +58,11 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 });
 
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const filter = pick(req.query, ['search', 'phone', 'email']);
-  const options = pick(req.query, ['hasAddress', 'hasOrganization', 'hasRole']);
-  const queryOptions = pick(req.query, ['sort', 'limit', 'page']);
+  const filter = pick(req.query, ['createdById', 'productId', 'targetId']);
+  const queryOptions = pick(req.query, ['limit', 'page']);
+  const options = pick(req.query, ['hasProduct']);
   try {
-    const data = await userService.getList(filter, {...queryOptions, options});
+    const data = await rateService.getList(filter, {...queryOptions, options});
     res.send(data);
   } catch (error: any) {
     return next(new ApiError(httpStatus.NOT_FOUND, error.message));
@@ -70,17 +70,17 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 });
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const filter = pick(req.query, ['organizationIds', 'search', 'phone', 'email']);
-  const options = pick(req.query, ['hasAddress', 'hasOrganization', 'hasRole']);
+  const filter = pick(req.query, ['createdById', 'productId', 'targetId']);
+  const options = pick(req.query, ['hasProduct']);
   try {
-    const data = await userService.getAll(filter, options);
+    const data = await rateService.getAll(filter, options);
     res.send(data);
   } catch (error: any) {
     return next(new ApiError(httpStatus.NOT_FOUND, error.message));
   }
 });
 
-export const userController = {
+export const rateController = {
   createOne,
   updateOne,
   deleteOne,

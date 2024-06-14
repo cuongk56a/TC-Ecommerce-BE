@@ -16,6 +16,7 @@ const envVarsSchema = Joi.object()
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     TABLE_PREFIX: Joi.string().required(),
 
+    TIMEZONE: Joi.string().required(),
     VALIDATION_FORMAT_DATE: Joi.string().required(),
     VALIDATION_FORMAT_DATETIME: Joi.string().required(),
 
@@ -68,6 +69,7 @@ export const appConfigs = {
     tablePrefix: envVars.TABLE_PREFIX,
   },
   queueNamePrefix: envVars.APP_QUEUENAME_PREFIX,
+  timeZone: envVars.TIMEZONE,
   validation: {
     formatDate: envVars.VALIDATION_FORMAT_DATE,
     formatDateTime: envVars.VALIDATION_FORMAT_DATETIME,

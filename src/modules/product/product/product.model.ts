@@ -10,6 +10,7 @@ import { TABLE_CATEGORY } from '../../category/category.configs';
 import { getImageUriFromFilename } from '../../../utils/core/stringUtil';
 import { TABLE_BRAND } from '../../brand/brand.configs';
 import { TABLE_ORDER } from '../../order/order.configs';
+import { TABLE_RATE } from '../../rate/rate.configs';
 
 export interface IProductModelDoc extends IProductDoc {}
 interface IProductModel extends IDocModel<IProductModelDoc> {}
@@ -66,6 +67,9 @@ const productSchema = new mongoose.Schema<IProductModelDoc>(
     unitId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true
+    },
+    star: {
+      type: Number
     },
     isActive: {
       type: Boolean,
@@ -138,7 +142,15 @@ productSchema.virtual('countOrder', {
   count: true,
 });
 
-const populateArr = ({hasUnit, hasCategory, hasBrand}: {hasUnit: boolean, hasCategory: boolean, hasBrand: boolean}) => {
+productSchema.virtual('rate', {
+  ref: TABLE_RATE,
+  localField: '_id', 
+  foreignField: 'productId',
+  justOne: false,
+  match: {deletedById: {$exists: false}},
+});
+
+const populateArr = ({hasUnit, hasCategory, hasBrand, hasCountOrder, hasRate}: {hasUnit: boolean, hasCategory: boolean, hasBrand: boolean, hasCountOrder: boolean, hasRate: boolean}) => {
   let pA: any[] = [];
   return pA
     .concat(
@@ -159,6 +171,20 @@ const populateArr = ({hasUnit, hasCategory, hasBrand}: {hasUnit: boolean, hasCat
       !!hasBrand
         ? {
             path: 'brand',
+          }
+        : [],
+    )
+    .concat(
+      !!hasCountOrder
+        ? {
+            path: 'countOrder',
+          }
+        : [],
+    )
+    .concat(
+      !!hasRate
+        ? {
+            path: 'rate',
           }
         : [],
     );

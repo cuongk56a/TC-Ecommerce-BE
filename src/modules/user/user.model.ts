@@ -109,6 +109,10 @@ userSchema.virtual('avatarUri').get(function () {
   return getImageUriFromFilename(this.avatar || '');
 });
 
+userSchema.virtual('isActive').get(function () {
+  return !!this.phone && !!this.email ? true : false;
+});
+
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 

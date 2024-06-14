@@ -21,10 +21,7 @@ const updateOne = {
     userId: Joi.string().custom(customValidations.objectId).required(),
   }),
   body: Joi.object().keys({
-    phone: Joi.string(),
-    hashedPassword: Joi.string(),
     fullName: Joi.string(),
-    email: Joi.string(),
     avatar: Joi.string().empty(''),
     birthday: Joi.string(),
     gender: Joi.string().valid(...Object.values(UserGender)),
@@ -59,10 +56,11 @@ const getList = {
     organizationId: Joi.string().custom(customValidations.objectId),
     phone: Joi.string().empty(''),
     email: Joi.string().empty(''),
+    search: Joi.string().empty(''),
     hasAddress: Joi.boolean(),
     hasOrganization: Joi.boolean(),
     hasRole: Joi.boolean(),
-    search: Joi.string().empty(''),
+    isActive: Joi.boolean(),
     ...customValidations.paginateValidation,
   }),
 };
@@ -73,10 +71,11 @@ const getAll = {
     organizationIds: Joi.string().custom(customValidations.objectId),
     phone: Joi.string().empty(''),
     email: Joi.string().empty(''),
+    search: Joi.string().empty(''),
     hasAddress: Joi.boolean(),
     hasOrganization: Joi.boolean(),
     hasRole: Joi.boolean(),
-    search: Joi.string().empty(''),
+    isActive: Joi.boolean(),
   }),
 };
 

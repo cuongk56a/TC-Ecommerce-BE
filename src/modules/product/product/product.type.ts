@@ -17,5 +17,6 @@ export interface IProductDoc extends IDoc {
   quantity: number;
   weight: number;
   unitId: mongoose.Schema.Types.ObjectId;
+  star: number;
   isActive?: boolean;
 }

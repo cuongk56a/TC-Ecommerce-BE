@@ -19,4 +19,5 @@ export interface IUserDoc extends IDoc {
   addressId: mongoose.Schema.Types.ObjectId;
   organizationIds: mongoose.Schema.Types.ObjectId[];
   isAdmin: boolean;
+  isActive: boolean;
 }

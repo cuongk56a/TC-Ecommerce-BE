@@ -13,6 +13,9 @@ import { productRoute } from '../../modules/product/product/product.route';
 import { imageRoute } from '../../modules/image/image.route';
 import { addressRoute } from '../../modules/address/address.route';
 import { orderRoute } from '../../modules/order/order.route';
+import { rateRoute } from '../../modules/rate/rate.route';
+import { voucherRoute } from '../../modules/voucher/voucher.route';
+import { cartRoute } from '../../modules/cart/cart.route';
 
 const router = express.Router();
 
@@ -68,6 +71,18 @@ const defaultRoutes: any[] = [
     {
         path: '/order',
         route: orderRoute,
+    },
+    {
+        path: '/rate',
+        route: rateRoute,
+    },
+    {
+        path: '/voucher',
+        route: voucherRoute,
+    },
+    {
+        path: '/cart',
+        route: cartRoute,
     },
 ];
 

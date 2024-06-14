@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import {IDoc} from '../../utils/types/entityTypes';
+import { IAddressModelDoc } from '../address/address.model';
+import { IUserModelDoc } from '../user/user.model';
 
 export enum STATUS_ORDER_TYPE {
   PENDING = 'PENDING',
@@ -52,6 +54,7 @@ export interface IOrderDoc extends IDoc {
   CODE: string;
   cart: CartItem[];
   shippingAddressId: mongoose.Schema.Types.ObjectId;
+  shippingAddress?: IAddressModelDoc;
   shippingCode?: string; //For ghtk: none or xteam
   shippingService?: string;
   shippingFee?: number;
@@ -63,4 +66,5 @@ export interface IOrderDoc extends IDoc {
   status: STATUS_ORDER_TYPE;
   paymentMethod: PAYMENT_METHOD_TYPE;
   totalPayment: number;
+  createdBy?: IUserModelDoc;
 }
