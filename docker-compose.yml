@@ -4,7 +4,7 @@ services:
     ports:
       - "2803:2803"
     depends_on:
-      # - mongo
+      - mongo
       - redis
     # environment:
     #   - NODE_ENV=${NODE_ENV}
@@ -36,12 +36,12 @@ services:
       - .:/usr/src/app
     command: yarn dev
 
-  # mongo:
-  #   image: mongo:latest
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo-data:/data/db
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
 
   redis:
     image: redis:latest

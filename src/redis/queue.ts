@@ -1,5 +1,6 @@
 import Queue from 'bull';
 import {appConfigs} from '../config/config';
+
 const QueueOptions = {
   redis: {host: appConfigs.redisHost, port: appConfigs.redisPort, password: appConfigs.redisPassword}
 }
