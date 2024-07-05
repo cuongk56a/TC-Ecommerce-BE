@@ -7,6 +7,8 @@ import { TABLE_USER } from '../user/user.configs';
 import { TABLE_ORGANIZATION } from '../organization/organization.configs';
 import { TABLE_PRODUCT } from '../product/product/product.configs';
 import { productService } from '../product/product/product.service';
+import { notificationService } from '../notification/notification.service';
+import { NOTIFICATION_FOR, NOTIFICATION_TYPE, titleObj } from '../notification/notification.type';
 
 export interface IRateModelDoc extends IRateDoc {}
 interface IRateModel extends IDocModel<IRateModelDoc> {}
@@ -97,19 +99,34 @@ rateSchema.pre('find', preFind);
 
 async function afterSave(doc: IRateModelDoc, next: any){
   if(!!doc){
-    const product = await productService.getOne({_id: doc.productId});
+    await Promise.all([
+      new Promise(async ()=> {
+        const product = await productService.getOne({_id: doc.productId});
 
-    if (!!product) {
-      const newStar = (product.star + doc.star) / 2;
-      await productService.updateOne(
-        {
-          _id: doc.productId,
-        },
-        {
-          star: newStar,
-        }
-      );
-    }
+      if (!!product) {
+        const newStar = (product.star + doc.star) / 2;
+        await productService.updateOne(
+          {
+            _id: doc.productId,
+          },
+          {
+            star: newStar,
+          }
+        );
+      }
+      }),
+      new Promise(async ()=> {
+        await notificationService.createOne({
+          targetId: doc.targetId,
+          notiType: NOTIFICATION_TYPE.RATE,
+          title: titleObj[NOTIFICATION_TYPE.RATE],
+          content: 'Đánh giá sản phẩm' + doc?.product?.name,
+          entityId: doc.productId,
+          notiFor: NOTIFICATION_FOR.ADMIN,
+        });
+      })
+      
+    ])
     next();
   }
   next();

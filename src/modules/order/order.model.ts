@@ -223,7 +223,7 @@ orderSchema.pre('findOne', preFind);
 orderSchema.pre('find', preFind);
 
 function afterSave(doc: IOrderModelDoc, next: any) {
-  if (!!doc && doc.status != STATUS_ORDER_TYPE.DRAFT) {
+  if (!!doc) {
     doc
       .populate([
         {
@@ -253,9 +253,8 @@ function afterSave(doc: IOrderModelDoc, next: any) {
           });
       })
       .catch((err: any) => {
-        // Handle any potential errors
         console.error('Error populating document:', err);
-        next(err); // Pass the error to the next middleware or callback
+        next(err);
       });
   }else {
     next();
@@ -263,6 +262,7 @@ function afterSave(doc: IOrderModelDoc, next: any) {
 }
 
 orderSchema.post('save', afterSave);
+orderSchema.post('findOneAndUpdate', afterSave);
 
 /**
  * @typedef Order

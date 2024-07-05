@@ -1,5 +1,4 @@
 import {URL} from 'url';
-import { getRedisImage } from '../../redis/redisImage';
 import { appConfigs } from '../../config/config';
 
 export function removeVietnameseTones(str: string) {

@@ -5,10 +5,10 @@ import { appConfigs } from './config/config';
 import { fakeData } from './fakeData/fake';
 import { onConnetCallback } from './redis';
 import http from 'http';
-import { Server } from 'socket.io';
+import { Socket } from 'socket.io';
 import { OrderQueue } from './modules/order/queue/OrderQueue';
-import cron from 'node-cron';
 import { orderService } from './modules/order/order.service';
+import cron from 'node-cron';
 
 declare global {
   let __basedir: string;
@@ -16,13 +16,13 @@ declare global {
     interface Request {
       userId: any;
       roleId: any;
+      domain: any;
       // isAdmin: boolean;
     }
   }
 }
 
 const server = http.createServer(app);
-const io = new Server(server);
 
 onConnetCallback(() => {
   console.log('Redis Connect Success!');
@@ -37,7 +37,7 @@ onConnetCallback(() => {
 
       server.listen(appConfigs.port, async () => {
         logger.info(`Listening to port ${appConfigs.port}`);
-
+        
         cron.schedule('0 0 * * *', async () => {
           try {
             await orderService.cronJobOrder()
@@ -50,8 +50,17 @@ onConnetCallback(() => {
           timezone: 'Asia/Ho_Chi_Minh'
         });
 
+        const {startSocketModule} = require('../src/socket/index');
+        startSocketModule(undefined, server, (socket: Socket, next: any) => next(), undefined);
+
         const onOrderQUE = new OrderQueue('OrderQueue');
         onOrderQUE.initQueue();
+
+        const onChatQUE = new OrderQueue('ChatQueue');
+        onChatQUE.initQueue();
+
+        const onNotifiQUE = new OrderQueue('NotificationQueue');
+        onNotifiQUE.initQueue();
 
         // fakeData();
       });

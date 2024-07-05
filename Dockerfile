@@ -1,8 +1,8 @@
-# syntax=docker/dockerfile:1
-
 FROM node:18-alpine
-WORKDIR /app
+WORKDIR /src
+COPY package.json yarn.lock ./
+RUN yarn install
 COPY . .
-RUN yarn install --production
-CMD ["node", "src/index.js"]
-EXPOSE 3000
+# RUN yarn dev
+EXPOSE 2803
+CMD ["yarn", "dev"]

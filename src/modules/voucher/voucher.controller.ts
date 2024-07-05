@@ -26,18 +26,13 @@ const updateOne = catchAsync(async (req: Request, res: Response, next: NextFunct
   const {voucherId} = req.params;
   const {endAt, ...body} = req.body;
   try {
-    let data: IVoucherModelDoc | null;
-    if (!!endAt && endAt == '') {
-      data = await voucherService.updateOne(
-        {_id: voucherId},
-        {
-          $unset: {endTime: ''},
-          ...body,
-        },
-      );
-    } else {
-      data = await voucherService.updateOne({_id: voucherId}, req.body);
-    }
+    const data = await voucherService.updateOne(
+      {_id: voucherId},
+      {
+        ...(endAt == '' ? {endAt, $unset: {endTime: ''}} : {endAt}),
+        ...body,
+      },
+    );
     if (!data) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
     }
@@ -129,7 +124,7 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 });
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const {check,userId, ...filter} = pick(req.query, ['targetId', 'search', 'check', 'isActive', 'voucherType', 'userId']);
+  const {check, userId, ...filter} = pick(req.query, ['targetId', 'search', 'check', 'isActive', 'voucherType', 'userId']);
   const options = pick(req.query, ['hasTarget', 'hasProducts', 'hasCategories']);
   try {
     let filterCheck = {};
@@ -225,10 +220,16 @@ const canUse = catchAsync(async (req: Request, res: Response, next: NextFunction
           if (voucher.applyFor == APPLY_FOR_TYPE.ALL) {
             return voucher;
           }
-          if (voucher.applyFor == APPLY_FOR_TYPE.CATEGORY  && categoryArray.some((category:any) => voucher.applyCategory.includes(category))) {
+          if (
+            voucher.applyFor == APPLY_FOR_TYPE.CATEGORY &&
+            categoryArray.some((category: any) => voucher.applyCategory.includes(category))
+          ) {
             return voucher;
           }
-          if (voucher.applyFor == APPLY_FOR_TYPE.PRODUCT && productArray.some((product:any) => voucher.applyCategory.includes(product))) {
+          if (
+            voucher.applyFor == APPLY_FOR_TYPE.PRODUCT &&
+            productArray.some((product: any) => voucher.applyCategory.includes(product))
+          ) {
             return voucher;
           }
           return null;

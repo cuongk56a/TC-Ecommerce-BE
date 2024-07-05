@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import {INotificationDoc, NOTIFICATION_FOR, NOTIFICATION_TYPE, entityModelObj} from './notification.type';
-import { IDocModel } from '../../utils/types/entityTypes';
+import {IDocModel} from '../../utils/types/entityTypes';
 import {TABLE_NOTIFICATION} from './notification.configs';
-import {paginate, toJSON} from '../../utils/plugins'
-import { TABLE_USER } from '../user/user.configs';
-import { TABLE_ORGANIZATION } from '../organization/organization.configs';
+import {paginate, toJSON} from '../../utils/plugins';
+import {TABLE_USER} from '../user/user.configs';
+import {TABLE_ORGANIZATION} from '../organization/organization.configs';
+import {createNewQueue} from '../../redis/queue';
 
 export interface INotificationModelDoc extends INotificationDoc {}
 interface INotificationModel extends IDocModel<INotificationModelDoc> {}
@@ -19,11 +20,11 @@ const notificationSchema = new mongoose.Schema<INotificationModelDoc>(
     targetOnModel: {
       type: String,
       enum: [TABLE_ORGANIZATION],
-      default: TABLE_ORGANIZATION
+      default: TABLE_ORGANIZATION,
     },
     notiType: {
       type: String,
-      enum: NOTIFICATION_TYPE
+      enum: NOTIFICATION_TYPE,
     },
     title: {
       type: String,
@@ -33,23 +34,19 @@ const notificationSchema = new mongoose.Schema<INotificationModelDoc>(
     },
     entityId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: 'entityOnModel', 
+      refPath: 'entityOnModel',
     },
     notiFor: {
       type: String,
-      enum: NOTIFICATION_FOR
-    }, 
+      enum: NOTIFICATION_FOR,
+    },
     users: {
-      type: [
-        mongoose.Schema.Types.ObjectId
-      ],
-      default: []
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
     },
     seen: {
-      type: [
-        mongoose.Schema.Types.ObjectId
-      ],
-      default: []
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
     },
     createdById: {
       type: mongoose.Schema.Types.ObjectId,
@@ -101,7 +98,15 @@ notificationSchema.virtual('userSeen', {
   match: {deletedById: {$exists: false}},
 });
 
-const populateArr = ({hasEntity, hasCanSeen, hasUserSeen}: {hasEntity: boolean, hasCanSeen: boolean, hasUserSeen: boolean}) => {
+const populateArr = ({
+  hasEntity,
+  hasCanSeen,
+  hasUserSeen,
+}: {
+  hasEntity: boolean;
+  hasCanSeen: boolean;
+  hasUserSeen: boolean;
+}) => {
   let pA: any[] = [];
   return pA
     .concat(
@@ -135,7 +140,39 @@ function preFind(next: any) {
 notificationSchema.pre('findOne', preFind);
 notificationSchema.pre('find', preFind);
 
+async function afterSave(doc: INotificationModelDoc, next: any) {
+  if (!!doc) {
+    doc.populate([
+      {
+        path: 'entity',
+      },
+      {
+        path: 'userCanSeen',
+      },
+      {
+        path: 'userSeen',
+      },
+    ]);
+    const NotificationQueue = createNewQueue('NotificationQueue');
+    NotificationQueue.add({doc})
+      .catch(err => {
+        console.error('Model:Notification:afterSave Err ', err);
+        next();
+      })
+      .then(() => {
+        next();
+      });
+    next();
+  }
+  next();
+}
+
+notificationSchema.post('save', afterSave);
+
 /**
  * @typedef Notification
  */
-export const NotificationModel = mongoose.model<INotificationModelDoc, INotificationModel>(TABLE_NOTIFICATION, notificationSchema);
+export const NotificationModel = mongoose.model<INotificationModelDoc, INotificationModel>(
+  TABLE_NOTIFICATION,
+  notificationSchema,
+);

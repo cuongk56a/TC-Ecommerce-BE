@@ -87,7 +87,6 @@ const defaultRoutes: any[] = [
 ];
 
 const devRoutes: any[] = [
-    // routes available only in development mode
     // {
     //   path: '/docs',
     //   route: docsRoute,

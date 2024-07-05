@@ -1,15 +1,7 @@
 import Queue from 'bull';
 import {appConfigs} from '../config/config';
-// const redisOptions = {
-//     redis: {host: appConfigs.redisHost, port: appConfigs.redisPort, password: appConfigs.redisPassword}
-// }
-
 const QueueOptions = {
-    redis: {host: 'redis-12030.c99.us-east-1-4.ec2.redns.redis-cloud.com', port: 12030, password: 'BQXiD0Sl9jpLk5R0NoEQnqwVnWqWj7c2'},
-    // limit: {
-    //     max: 1,
-    //     duration: 1000,
-    // }
+  redis: {host: appConfigs.redisHost, port: appConfigs.redisPort, password: appConfigs.redisPassword}
 }
 
 export const getAppQueueName = (qName: string) => {

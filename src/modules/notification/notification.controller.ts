@@ -69,7 +69,7 @@ const getOne = catchAsync(async (req: Request, res: Response, next: NextFunction
 });
 
 const getList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isTeacher','isAdmin','search','notificationId']);
+    const filter = pick(req.query, ['targetId', 'targetOnModel','notiType','entityId','notiFor', 'userId']);
     const options = pick(req.query, ['hasEntity', 'hasCanSeen', 'hasUserSeen']);
     const queryOptions = pick(req.query, ['sort', 'limit', 'page']);
     try {
@@ -81,7 +81,7 @@ const getList = catchAsync(async (req: Request, res: Response, next: NextFunctio
 });
 
 const getAll = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const filter = pick(req.query, ['createdById', 'isAdmin', 'isTeacher','search','notificationId']);
+    const filter = pick(req.query, ['targetId', 'targetOnModel','notiType','entityId','notiFor', 'userId']);
     const options = pick(req.query, ['hasEntity', 'hasCanSeen', 'hasUserSeen']);
     try {
         const data = await notificationService.getAll(filter, options);

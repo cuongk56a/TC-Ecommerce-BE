@@ -66,7 +66,7 @@ const cronJobOrder = async (filter?: any, options?: any, sortOptions?: any): Pro
   );
   await Promise.all([
     orders.map(async(order:any)=>{
-      OrderModel.findOneAndUpdate({_id: order?._id}, {status: STATUS_ORDER_TYPE.REJECT}, { new: true});
+      OrderModel.findOneAndUpdate({_id: order?._id}, {status: STATUS_ORDER_TYPE.CANCELLED}, { new: true});
     })
   ])
   return orders
