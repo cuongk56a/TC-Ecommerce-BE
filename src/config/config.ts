@@ -12,7 +12,7 @@ const envVarsSchema = Joi.object()
     REDIS_HOST: Joi.string().default('127.0.0.1'),
     REDIS_PORT: Joi.string().default(6379),
     REDIS_PASSWORD: Joi.string().allow('', null),
-    REDIS_URI: Joi.string().required(),
+    // REDIS_URI: Joi.string().required(),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     TABLE_PREFIX: Joi.string().required(),
 
@@ -55,7 +55,7 @@ export const appConfigs = {
   redisHost: envVars.REDIS_HOST,
   redisPort: envVars.REDIS_PORT,
   redisPassword: envVars.REDIS_PASSWORD,
-  redis: envVars.REDIS_URI,
+  // redis: envVars.REDIS_URI,
   token_secret: envVars.JWT_TOKEN_SECRET,
   mongoose: {
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
