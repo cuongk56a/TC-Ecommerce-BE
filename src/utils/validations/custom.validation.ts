@@ -19,19 +19,19 @@ const password = (value: any, helpers: any) => {
   return value;
 };
 
-const fullName = (name: string, helpers: any) => {
-  if (name.length < 2) {
-    return helpers.message('name invalid');
-  }
-  if (
-    !name.match(
-      /[^a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/u,
-    )
-  ) {
-    return helpers.message('name invalid');
-  }
-  return name;
-};
+// const fullName = (name: string, helpers: any) => {
+//   if (name.length < 2) {
+//     return helpers.message('name invalid');
+//   }
+//   if (
+//     !name.match(
+//       /[^a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/u,
+//     )
+//   ) {
+//     return helpers.message('name invalid');
+//   }
+//   return name;
+// };
 
 const phone = (phone: string, helpers: any) => {
   if (phone.length < 10) {
@@ -122,7 +122,7 @@ export const customValidations = {
   updateEntityValidation,
   validateDate,
   validateDateTime,
-  fullName,
+  // fullName,
   phone,
   email,
   validateCost,
