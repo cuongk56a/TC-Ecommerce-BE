@@ -9,6 +9,8 @@ import { Socket } from 'socket.io';
 import { OrderQueue } from './modules/order/queue/OrderQueue';
 import { orderService } from './modules/order/order.service';
 import cron from 'node-cron';
+import { ChatQueue } from './modules/message/chat/queue/ChatQueue';
+import { NotificationQueue } from './modules/notification/queue/NotificationQueue';
 
 declare global {
   let __basedir: string;
@@ -56,10 +58,10 @@ onConnetCallback(() => {
         const onOrderQUE = new OrderQueue('OrderQueue');
         onOrderQUE.initQueue();
 
-        const onChatQUE = new OrderQueue('ChatQueue');
+        const onChatQUE = new ChatQueue('ChatQueue');
         onChatQUE.initQueue();
 
-        const onNotifiQUE = new OrderQueue('NotificationQueue');
+        const onNotifiQUE = new NotificationQueue('NotificationQueue');
         onNotifiQUE.initQueue();
 
         // fakeData();

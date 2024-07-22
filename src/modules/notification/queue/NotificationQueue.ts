@@ -2,7 +2,7 @@ import AbstractQueueProcessor, { createNewQueue } from '../../../redis/queue';
 import SocketQueue from '../../../socket/queue/SocketQueue';
 import { NOTIFICATION_FOR } from '../notification.type';
 
-export class NotificationQueue extends SocketQueue {
+export class NotificationQueue extends AbstractQueueProcessor {
   processQueue = async (
     job: {
       data: {
