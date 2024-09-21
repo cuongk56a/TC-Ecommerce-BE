@@ -12,7 +12,7 @@ const envVarsSchema = Joi.object()
     REDIS_HOST: Joi.string().default('127.0.0.1'),
     REDIS_PORT: Joi.string().default(6379),
     REDIS_PASSWORD: Joi.string().allow('', null),
-    REDIS_URI: Joi.string().required(),
+    // REDIS_URI: Joi.string().required(),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     TABLE_PREFIX: Joi.string().required(),
 

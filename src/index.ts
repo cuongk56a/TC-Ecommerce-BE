@@ -9,6 +9,7 @@ import { Socket } from 'socket.io';
 import { OrderQueue } from './modules/order/queue/OrderQueue';
 import { orderService } from './modules/order/order.service';
 import cron from 'node-cron';
+const TelegramBot = require('node-telegram-bot-api');
 import { ChatQueue } from './modules/message/chat/queue/ChatQueue';
 import { NotificationQueue } from './modules/notification/queue/NotificationQueue';
 
@@ -25,6 +26,7 @@ declare global {
 }
 
 const server = http.createServer(app);
+const bot = new TelegramBot("7356040195:AAHbIfkNcGWpUnSZHiOuVwZ-pQ15AT2YYvM", {polling: true});
 
 onConnetCallback(() => {
   console.log('Redis Connect Success!');
@@ -39,6 +41,9 @@ onConnetCallback(() => {
 
       server.listen(appConfigs.port, async () => {
         logger.info(`Listening to port ${appConfigs.port}`);
+
+
+        bot.sendMessage('-4518390392', 'Nhậu đê ae @Quân @Tân');
         
         cron.schedule('0 0 * * *', async () => {
           try {
