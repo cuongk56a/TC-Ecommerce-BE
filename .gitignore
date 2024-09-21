@@ -1,3 +1,25 @@
+# Dependencies
 node_modules
-.env
+build
+build_production
+
+files/leads/*
+uploads/*
+
+# yarn error logs
+yarn-error.log
 yarn.lock
+
+# Environment varibales
+.env
+!.env*.development
+!.env*.production
+!.env.release
+resources/static/assets/uploads/temp/*
+
+# Code coverage
+coverage
+
+# bun
+bun.lockb
+.DS_Store
